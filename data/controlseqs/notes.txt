@@ -1,0 +1,3 @@
+dehydrogenase AND reviewed:yes AND organism:"Homo sapiens (Human) [9606]"
+
+steroid receptor AND reviewed:yes AND organism:"Homo sapiens (Human) [9606]"

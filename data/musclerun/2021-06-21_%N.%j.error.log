@@ -1,0 +1,29 @@
+
+MUSCLE v3.8.31 by Robert C. Edgar
+
+http://www.drive5.com/muscle
+This software is donated to the public domain.
+Please cite: Edgar, R.C. Nucleic Acids Res 32(5), 1792-97.
+
+
+*** ERROR ***  Cannot open './projects/EnzymeExpMax/data/controlseqs/2021-06-21_uniprot-steroid+receptor-filtered-organism+(Human)+[9606--.fasta' errno=2
+
+
+MUSCLE v3.8.31 by Robert C. Edgar
+
+http://www.drive5.com/muscle
+This software is donated to the public domain.
+Please cite: Edgar, R.C. Nucleic Acids Res 32(5), 1792-97.
+
+
+*** ERROR ***  Invalid file format, expected '>' to start FASTA label
+
+MUSCLE v3.8.31 by Robert C. Edgar
+
+http://www.drive5.com/muscle
+This software is donated to the public domain.
+Please cite: Edgar, R.C. Nucleic Acids Res 32(5), 1792-97.
+
+
+*** ERROR ***  Cannot open '../controlseqs/uniprot-dehydrogenase-filtered-reviewed_yes+AND+organism__Homo+sapiens+\(--.fasta' errno=2
+
