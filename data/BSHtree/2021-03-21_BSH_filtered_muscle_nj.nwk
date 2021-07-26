@@ -1,0 +1,99 @@
+#NEXUS 
+
+Begin trees;  [Treefile saved Sun Mar 21 14:50:59 2021]
+[!
+>Data file = 2021-03-21_BSH_filtered_muscle.nex
+>Heuristic search settings:
+>  Optimality criterion = distance (weighted least squares with power=2)
+>    Negative branch lengths allowed, but set to zero for tree-score calculation
+>    Distance measure = uncorrected ("p")
+>    All characters have equal weight
+>  Starting tree(s) obtained via neighbor-joining
+>  Branch-swapping algorithm: subtree-pruning-regrafting (SPR) with reconnection limit = 8
+>    Steepest descent option not in effect
+>  Initial 'Maxtrees' setting = 46900 (will be auto-increased by 100)
+>  Zero-length branches not collapsed
+>  'MulTrees' option in effect
+>  No topological constraints in effect
+>  Trees are unrooted
+>
+>NOTE: Random-addition-sequence option is ignored when starting trees are obtained using neighbor-joining.
+>
+>Heuristic search completed
+>  Total number of rearrangements tried = 16491
+>  Score of best tree(s) found =  (%SD=4.37295, g%SD=4.37295[k=119])
+>  Number of trees retained = 2
+>  Time used = 4.86 sec (CPU time = 4.82 sec)
+]
+	Translate
+		1 id|A0A380GLM7,
+		2 id|A0A1D4P6X4,
+		3 id|A0A380HMH1,
+		4 id|D4IIZ6,
+		5 id|A0A174A3V4,
+		6 id|A0A174ES06,
+		7 id|A0A139K753,
+		8 id|A0A173Y2R7,
+		9 id|A0A174FWH1,
+		10 id|D4VET1,
+		11 id|D6D8L4,
+		12 id|A0A174S8H3,
+		13 id|A0A0P0ENF5,
+		14 id|A0A174JQR6,
+		15 id|A0A0P0LK75,
+		16 id|A0A1H7H150,
+		17 id|A0A1Q6JKX4,
+		18 id|A0A174MGF4,
+		19 id|A0A174N0H0,
+		20 id|A0A108TCY7,
+		21 id|A0A380YLD2,
+		22 id|A0A1C6DCX4,
+		23 id|A0A0P0FKS2,
+		24 id|A0A108T443,
+		25 id|A0A174CW35,
+		26 id|A0A174U831,
+		27 id|A0A174WER9,
+		28 id|A0A174MYH4,
+		29 id|A0A139JWT4,
+		30 id|A0A174JHB3,
+		31 id|A0A173XUL0,
+		32 id|D6D837,
+		33 id|A0A174F9J2,
+		34 id|D4VSU1,
+		35 id|A0A174V343,
+		36 id|A0A397WKZ7,
+		37 id|A0A0P0M2Y4,
+		38 id|A0A1H7FFJ4,
+		39 id|D0R2U6,
+		40 id|A0A0M2NIU1,
+		41 id|A0A132P9C9,
+		42 id|A0A286V972,
+		43 id|I3U2V6,
+		44 id|A0A376H0L7,
+		45 id|T0VL23,
+		46 id|A0A1A7TBV0,
+		47 id|Q75N78,
+		48 id|A0A023J8T6,
+		49 id|A0A132P8Q3,
+		50 id|Q3Y1M8,
+		51 id|Q83YZ2,
+		52 id|A0A1C5S406,
+		53 id|D4JU54,
+		54 id|A0A2N0UPL9,
+		55 id|A0A2N0UWT2,
+		56 id|A0A2N0UVB8,
+		57 id|A0A1C5X749,
+		58 id|A0A1C6KHI5,
+		59 id|A0A1C5TY89,
+		60 id|A0A1C5VKY6,
+		61 id|A0A173RY76,
+		62 id|Q9F660,
+		63 id|B3XRW1,
+		64 id|A0A0U5K4C1,
+		65 id|A0A0U5F994,
+		66 id|A5VJH0,
+		67 id|A0A0U5KD37
+		;
+tree 'PAUP_1' = [&U] (1,(2,3),(((((4,(((5,8),(6,7)),(((9,(10,11)),(12,(13,14))),((((15,16),17),(18,19)),(20,21))))),((22,(23,24)),(25,26))),(27,(((28,29),(30,31)),((32,(33,34)),(35,((36,37),38)))))),((((40,((((41,42),43),(46,(47,(((48,50),49),51)))),(44,45))),(52,((53,(54,(55,56))),(((57,58),59),(60,61))))),((63,((65,66),67)),64)),62)),39));
+tree 'PAUP_2' = [&U] (1,(2,3),(((((4,(((5,8),(6,7)),(((9,(10,11)),(12,(13,14))),((((15,16),17),(18,19)),(20,21))))),((22,(23,24)),(25,26))),(27,(((28,29),(30,31)),((32,(33,34)),(35,((36,37),38)))))),((((40,((((41,42),43),(46,(47,(((48,49),50),51)))),(44,45))),(52,((53,(54,(55,56))),(((57,58),59),(60,61))))),((63,((65,66),67)),64)),62)),39));
+End;

@@ -1,0 +1,65 @@
+;   MEGA-CC (Molecular Evolutionary Genetics Analysis Compute Core)
+;
+;   Suggested Citation for MEGA-CC 10:
+;
+;   Kumar S, Stecher G, Li M, Knyaz C, Tamura K
+;   MEGA X: Molecular Evolutionary Genetics Analysis across computing platforms
+;   Molecular Biology and Evolution (2018) 35:1547-1549
+;
+;   Kumar S, Stecher G, Peterson D, and Tamura K
+;   MEGA-CC: Computing Core of Molecular Evolutionary Genetics
+;   Analysis Program for Automated and Iterative Data Analysis.
+;   Bioinformatics (2012) 28:2685-2686 (Epub 2012 Aug 24)
+
+[Application Info]
+
+	Version                                 = 10.2.2
+	Build                                   = 10201217-x86_64
+	User Interface                          = CommandLine
+	Operating System                        = linux
+
+[General Info]
+
+	Data Type                               = amino acid
+	No. of Taxa                             =      934
+	No. of Sites                            =      155
+	Data File                               = './BSHaln/2021-01-11_BSH.meg'
+	Settings File                           = './Mega_input/Tree_input/infer_MP_amino_acid_bootstrap.mao'
+	Command Line                            = /usr/lib/megax/megacc -a ./Mega_input/Tree_input/infer_MP_amino_acid_bootstrap.mao -d ./BSHaln/2021-01-11_BSH.meg -o ./BSHtree/2021-01-15_BSH_MP
+
+[Analysis Settings]
+
+	Analysis                                = Phylogeny Reconstruction
+	Statistical Method                      = Maximum Parsimony
+	Test of Phylogeny                       = Bootstrap method
+	No. of Bootstrap Replications           = 500
+	Substitutions Type                      = Amino acid
+	Gaps/Missing Data Treatment             = Partial deletion
+	Site Coverage Cutoff (%)                = 95
+	MP Search Method                        = Subtree-Pruning-Regrafting (SPR)
+	No. of Initial Trees (random addition)  = 10
+	MP Search level                         = 1
+	Max No. of Trees to Retain              = 100
+	Number of Threads                       = 8
+	Has Time Limit                          = False
+	Maximum Execution Time                  = -1
+	datatype                                = snProtein
+	MissingBaseSymbol                       = ?
+	IdenticalBaseSymbol                     = .
+	GapSymbol                               = -
+	Labelled Sites                          = All Sites
+	Labels to Include                       = 
+
+[Analysis Statistics]
+
+	Start Time                              = 01/15/21 06:58:12 AM
+	End Time                                = 01/15/21 07:18:46 AM
+	Execution Time                          = 1234.049 (seconds)
+	Max Heap Memory Used                    = 50.730 (MB)
+	Tree Length                             = 17834.000000
+	CI                                      =        0.132051(Consistency Index for all sites)
+	RI                                      =        0.790915(Retention Index for all sites)
+	RC                                      =        0.104441(Rescaled Index for all sites)
+	iCI                                     =        0.132051(Consistency Index for parsimony informative sites)
+	iRI                                     =        0.790915(Retention Index for parsimony informative sites)
+	iRC                                     =        0.104441(Rescaled Index for parsimony informative sites)
