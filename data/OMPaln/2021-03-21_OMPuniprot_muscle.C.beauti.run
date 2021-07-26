@@ -1,0 +1,15 @@
+#!/bin/sh                    
+#$ -N omptrees             # The job name
+####$ --time=12:00:00      # The walltime
+
+#$ -cwd                    # The initial directory
+#$ -o omptrees.screen.log  # The output file
+#$ -e omptrees.error.log   # The error file
+#$ -pe smp 8               #num nodes
+
+module load beagle-lib/20140322-goolf-1.5.14
+module load Java/1.8.0_5
+
+echo A | java -jar ../../beast/lib/launcher.jar -seed 1111 -beagle_SSE ./2021-03-21_OMPuniprot_muscle.B.beauti.xml 
+
+

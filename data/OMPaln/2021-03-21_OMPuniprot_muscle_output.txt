@@ -1,0 +1,23 @@
+
+P A U P *
+Version 4.0a (build 168) for Unix/Linux (built on Aug  2 2020 at 07:10:27)
+Sun Mar 21 14:51:48 2021
+
+
+Processing of file "/raid60/homes/home3/aorvelez/projects/EnzymeExpMax/data/OMPaln/2021-03-
+21_OMPuniprot_muscle.nex" begins...
+
+Are you sure you want to reset the active datafile? (Y/n)Y
+
+Data read in 'protein' format
+
+Data matrix has 128 taxa, 1231 characters
+Valid character-state symbols: ARNDCQEGHILKMFPSTWYV
+Missing data identified by '?'
+Gaps identified by '-'
+"Equate" macros in effect:
+   B,b ==> {DN}
+   Z,z ==> {EQ}
+   X,x ==> {ARNDCQEGHILKMFPSTWYV}
+
+Processing of input file "2021-03-21_OMPuniprot_muscle.nex" completed.

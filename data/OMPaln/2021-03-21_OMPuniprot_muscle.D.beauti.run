@@ -1,0 +1,11 @@
+#!/bin/sh
+#$ -N omptrees      
+#$ -cwd
+#$ -o omptrees.screen.log
+#$ -e omptrees.error.log
+#$ -pe smp 8
+
+module load beagle-lib/20140322-goolf-1.5.14
+module load Java/1.8.0_5
+
+echo A | java -jar ../../beast/lib/launcher.jar -seed 111 -beagle_SSE ./2021-03-21_OMPuniprot_muscle.B.beauti.xml
