@@ -1,0 +1,28 @@
+bash: module: command not found
+bash: module: command not found
+File: uniprotnucreceptor_homo_beauti.xml seed: 1111 threads: 1
+Loading package BEAST v2.6.4
+Loading package BEAST v2.6.4
+Failed to load BEAGLE library: no hmsbeagle-jni in java.library.path
+Turning on scaling to prevent numeric instability 1.0201
+Warning: Overwriting file ../uniprottrees/uniprotnucreceptor_homo.trees
+bash: module: command not found
+bash: module: command not found
+File: uniprotnucreceptor_homo_B.beauti.xml seed: 1111 threads: 1
+Loading package BEAST v2.6.4
+Loading package BEAST v2.6.4
+Failed to load BEAGLE library: no hmsbeagle-jni in java.library.path
+Turning on scaling to prevent numeric instability 1.0201
+bash: module: command not found
+bash: module: command not found
+File: 2021-06-17_uniprotnucreceptor_homo_beauti.xml seed: 1111 threads: 1
+Loading package BEAST v2.6.4
+Loading package BEAST v2.6.4
+Failed to load BEAGLE library: no hmsbeagle-jni in java.library.path
+Turning on scaling to prevent numeric instability 1.0201
+bash: module: command not found
+bash: module: command not found
+bash: srun: command not found
+bash: module: command not found
+bash: module: command not found
+bash: srun: command not found
