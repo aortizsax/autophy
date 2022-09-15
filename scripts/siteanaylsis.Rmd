@@ -1,0 +1,785 @@
+---
+title: "Site analysis"
+author: "Adrian Ortiz Velez"
+date: "1/11/2022"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+10% lent 
+2 stdev
+clust sis parent 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Load the required packages
+library(dplyr)
+library(ggplot2)
+library(ggseqlogo)
+library(phangorn)
+library(seqLogo)
+library(fuzzySim)
+library(svglite)
+```
+
+# Site analysis for ClustTree: 
+## an automatic partitioning of phylogenetic tree and identification of unique MSA features
+Adrian Ortiz-Velez1, Jeet Sukumaran1 and Scott Kelley1
+
+1Department of Biology, San Diego State University, San Diego, CA, 92182, USA
+
+## Abstract:
+Phylogenetic analysis of protein sequences provides a powerful means of identifying novel protein functions and subfamilies, as well as identifying and resolving annotation errors. However, automation of functional clustering based on phylogenetic trees has been challenging and most of it is done manually. Clustering phylogenetic trees usually require inter and intra-specific threshold, leading to an ad hoc problem. We propose a new likelihood distance phylogenetic clustering algorithm that identifies clusters without using any ad hoc distance or confidence requirement. The algorithm combines uniform manifold approximation and projection (UMAP), as a dimension reduction technique, with Gaussian mixture models as a k-means like procedure to automatically group sequences into sub- families. Our algorithm also applies a “second pass” hierarchical cluster identification algorithm to resolve non-monophyletic groups. After identifying the clusters, we also perform a site analysis using probabilistic and phylogenetic techniques to identify aspects of the alignment that may functionally differentiate distinct protein families. We tested our approach with several well-curated protein families (Outer membrane proteins, acyltransferase, and dehydrogenase) and showed our automated methods recapitulated know subfamilies. We also applied our methods to broad range of different protein families multiple evolving at highly different rates from multiple databases, including Pfam, PANTHER, and UNIPROT. Our results showed that our approach readily resolved a wide variety of putative subfamilies across a wide range of evolutionary rates both within and among phylogenies. Our automated UMAP-assisted Gaussian-Mixture clustering and random forest feature importance will enable novel functional annotations on increasingly large biological datasets.  
+
+
+### Continuation of Cluster analysis 
+
+```{r pressure}
+
+
+ogcbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", 
+               "#0072B2", "#D55E00", "#CC79A7")
+cbPalette <- c('#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+               '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+               '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000',
+               '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080')
+```
+
+```{r}
+
+tree <- read.nexus('../data/OMPtree/2021-06-16_OMPuniprot_muscle.tree')
+clusted<-read.csv('../data/OMPcolored/2021-10-01OMPuniprot_colored_RF.csv',header=T,check.names = F)
+clusted<-read.csv('../data/OMPcolored/2021-10-22OMPuniprot_colored_RF.csv',header=T,check.names = F)
+OMP <- read.phyDat('../data/uniprotaln/uniprotOMP_muscle.fasta',
+                   format='fasta',type='AA')
+FAM <- 'OMP'
+
+tree <- read.nexus('../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree')
+clusted<-read.csv('../data/OMPcolored/2021-10-01OMPuniprot_colored_RF.csv',header=T,check.names = F)
+clusted<-read.csv('../data/uniprotcolored/2022-04-21uniprotOMP_colored_RF.csv',header=T,check.names = F)
+OMP <- read.phyDat('../data/uniprotaln/uniprotOMP_muscle.fasta',
+                   format='fasta',type='AA')
+
+FAM <- 'OMP'
+
+
+# tree <- read.nexus('../data/BSHaln/2021-03-21_BSH_filtered_muscle_relaxed.tree')
+# clusted<-read.csv('../data/BSHcolored/2021-10-22BSHmouse_colored_RF.csv',header=T,check.names = F)
+# OMP <- read.phyDat('../data/BSHaln/2021-03-21_BSH_filtered_muscle.fasta',
+#                    format='fasta',type='AA')
+# FAM <- 'BSH'
+# 
+# 
+# 
+tree <- read.nexus('../data/controltrees/2021-06-22_uniprot-dehydrogenase-filtered-homo-muscle.1111.mean.tree')
+clusted<-read.csv('../data/controlcolored/2022-04-11controldehydrogenase_colored_RF.csv',
+                 header=T,check.names = F)
+OMP <- read.phyDat('../data/controlaln/2021-06-22_uniprot-dehydrogenase-filtered-homo-muscle.fasta',
+                  format='fasta',type='AA')
+FAM <- 'control'
+
+# 
+tree <- read.nexus('../data/controltrees/2021-06-22_receptor-filtered-homo-musclecorr.mean.tree')
+clusted<-read.csv('../data/controlcolored/2022-04-21controlreceptor_colored_RF.csv',
+                 header=T,check.names = F)
+OMP <- read.phyDat('../data/controlaln/2021-06-22_receptor-filtered-homo-muscle.fasta',
+                  format='fasta',type='AA')
+FAM <- 'control'
+
+# 
+tree <- read.nexus('../data/controltrees/2021-06-22_acyltransferase-filtered-homo-musclecorr.1111.mean.tree')
+clusted<-read.csv('../data/controlcolored/2022-04-21controlacyltrans_colored_RF.csv',
+                 header=T,check.names = F)
+OMP <- read.phyDat('../data/controlaln/2021-06-22_acyltransferase-filtered-homo-muscle.fasta',
+                  format='fasta',type='AA')
+FAM <- 'control'
+
+# 
+tree <- read.nexus('../data/controltrees/2021-06-22_receptor-filtered-homo-musclecorr.mean.tree')
+clusted<-read.csv('../data/controlcolored/2022-04-21controlreceptor_colored_RF.csv',
+                 header=T,check.names = F)
+OMP <- read.phyDat('../data/controlaln/2021-06-22_receptor-filtered-homo-muscle.fasta',
+                  format='fasta',type='AA')
+FAM <- 'control'
+
+#aln 2021-07-27b_ebolaspikeglycoprotein_muscle.fasta
+#2022-04-11viralebolasgly_colored_RF.csv
+#2021-08-09b_ebolaspikeglycoprotein_muscle_new.11112222.mean.tree
+tree <- read.nexus('../data/viraltrees/2021-08-09b_ebolaspikeglycoprotein_muscle_new.11112222.mean.tree')
+clusted<-read.csv('../data/viralcolored/2022-04-11viralebolasgly_colored_RF.csv',     header=T,check.names = F)
+
+OMP <- read.phyDat('../data/viralaln/2021-07-27b_ebolaspikeglycoprotein_muscle.fasta',format='fasta',type='AA')
+FAM <- 'viral'
+
+
+#aln 2021-06-18_sarscov2sgly_muscle.fasta
+#2022-04-11viralsarscov2sgly_colored_RF.csv
+#2021-06-23_sarscov2sgly_muscle_x.mean.tree
+# tree <- read.nexus('../data/viraltrees/2021-06-23_sarscov2sgly_muscle_x.mean.tree')
+# clusted<-read.csv('../data/viralcolored/2022-04-11viralsarscov2sgly_colored_RF.csv',     header=T,check.names = F)
+# 
+# OMP <- read.phyDat('../data/viralaln/2021-06-18_sarscov2sgly_muscle.fasta',format='fasta',type='AA')
+# FAM <- 'viral'
+
+```
+
+```{r}
+tree <- read.nexus('../data/controltrees/2021-06-22_receptor-filtered-homo-musclecorr.median.tree')
+clusted<-read.csv('../data/controlcolored/2022-01-11controlreceptor_colored_RF.csv',
+                  header=T,check.names = F)
+OMP <- read.phyDat('../data/controlaln/2021-06-22_receptor-filtered-homo-muscle.fasta',
+                   format='fasta',type='AA')
+FAM <- 'control'
+
+
+```
+
+```{r}
+OMP <- as.data.frame(OMP)
+
+tree$tip.label
+
+
+#lst<- strsplit(colnames(OMP),"..",fixed=TRUE)# "\\s+")
+#v2 <- sapply(lst, function(x) x[1])
+
+#colnames(OMP) <- v2
+clusted$Label <- gsub(' ','_',clusted$Label)
+head(clusted)
+# clusted$Label <- gsub('.H','_H',clusted$Label)
+# head(clusted)
+# colnames(OMP) <- gsub('_H','.H',colnames(OMP))
+# head(OMP)
+
+clusted$Label <- gsub('YP','YP_',clusted$Label)
+head(clusted)
+clusted$Label
+
+colnames(OMP) <- gsub('YP','YP_',colnames(OMP))
+head(OMP)
+
+
+table(colnames(OMP) %in% tree$tip.label)
+table(tree$tip.label %in% colnames(OMP))
+table(clusted$Label %in% tree$tip.label)
+table(tree$tip.label %in% clusted$Label)
+
+```
+
+```{r}
+OMP <- phyDat(OMP,
+              type="USER",
+              levels=c('A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 
+                       'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 
+                       'Y', 'V','-'))
+
+#for graphing purposes 
+OMPindex <- attr(OMP, 'index')
+
+
+```
+
+```{r}
+
+
+gapsdf <- (as.data.frame(OMP)=='-')*1 #to int
+table(gapsdf==1)
+gapsdf[gapsdf==1]<-'O'
+gapsdf[gapsdf==0]<-'X'
+
+
+gaps<-phyDat(t(gapsdf),
+       type="USER",
+       levels=c('O','X'))
+gapsindex <- attr(gaps, 'index')
+
+
+```
+
+```{r}
+#parsimony model 
+parsimony(tree, gaps)
+
+
+gap.anc.acctran <- ancestral.pars(tree, gaps, "ACCTRAN")
+gap.anc.mpr <- ancestral.pars(tree, gaps, "MPR")
+
+
+# t(subset(anc.mpr, getRoot(tree))[[1]])
+```
+
+<!-- ```{r} -->
+<!-- plotAnc(tree, anc.mpr, 40,col=cbPalette) -->
+<!-- title("MPR") -->
+<!-- ``` -->
+
+```{r}
+plotAnc(tree, gap.anc.mpr, 1,col=cbPalette)
+title("MPR")
+
+```
+
+<!-- ```{r} -->
+<!-- plotAnc(tree, anc.acctran, 17,col=cbPalette)  -->
+<!-- title("ACCTRAN") -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+
+<!-- plotAnc(tree,  -->
+<!--         gap.anc.ml,  -->
+<!--         2, -->
+<!--         col=ogcbPalette) -->
+<!-- title("ML") -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- plotAnc(tree, gap.anc.ml, -->
+<!--         attr(gap.anc.ml,'index')[40], -->
+<!--         cex.pie = 0.5, -->
+<!--         col=ogcbPalette) -->
+<!-- title("ML") -->
+<!-- ``` -->
+
+
+
+```{r}
+# show some of the methods available for class pml
+methods(class="pml")
+
+
+```
+
+```{r}
+
+#AA BAYES
+fit <- pml(tree, OMP)
+fit <- optim.pml(fit, model="JTT", control = pml.control(trace=0),
+                 method='BIC')
+
+# anc.ml <- ancestral.pml(fit, "ml") 
+anc.bayes <- ancestral.pml(fit, "bayes") 
+```
+
+```{r}
+# 
+# plotAnc(tree, anc.bayes, 60,col=cbPalette,
+#        cex.pie = 0.3)
+# title("Bayes")
+```
+```{r}
+# 
+# plotAnc(tree, anc.bayes, 40,col=cbPalette,
+#        cex.pie = 0.3)
+# 
+# 
+# title("Bayes")
+```
+
+
+```{r}
+`%ni%` <- Negate(`%in%`)
+
+intNode <- sort(Descendants(tree,120,'all'))[sort(Descendants(tree,120,'all')) %ni% Descendants(tree,120,'tips')[[1]]]
+
+```
+
+```{r}
+head(clusted)
+
+```
+
+Cluster data frame
+```{r}
+clades<- clusted%>%
+          group_by(Cluster)%>%
+          select(Cluster,Label)
+
+head(clades)
+
+```
+
+Since sequence reconstructions are  a set of probability distributions for each position of the sequence. To set up the divergence calculations, first we define the KL divergence for one amino acid site. Where P is the sequence reconstruction of interest, and Q is the control sequence. 
+
+$$D_{KL}(P||Q)=\sum_{x \in [aminoacids]} P(x) log(\frac{P(x)}{Q(x)}),$$
+where x in an amino acid, P(x) and Q(x) the frequencies of amino acid
+
+Shannon entropy
+$$H(P)=-\sum_{x \in [aminoacids]} P(x)log(P(x)),$$
+KL Diverence 
+$$D_{KL}(P||Q)=\sum_{x \in [aminoacids]} P(x) log(\frac{P(x)}{Q(x)}),$$
+Normalized entropy
+$$H_{N}(P)=-\frac{1}{log(N_{P})}\sum_{x \in [aminoacids]} P(x) log(P(x)),$$
+
+Normalized entropy
+$$H_{n}(P)=-\sum_{x \in [aminoacids]} P(x) \frac{log(P(x))}{log(n)},$$
+
+Idea A for normalized divergence
+$$D_{KLnorm}(P||Q)=\sum_{x \in [aminoacids]} \frac{P(x)n_{Q}}{n_{P}} log(\frac{P(x)}{Q(x)}),$$
+
+
+Idea B for normalized divergence
+$$D_{KLnorm}(P||Q)=\sum_{x \in [aminoacids]} P(x) log(\frac{P(x)n_{Q}}{Q(x)n_{P}}),$$
+
+
+$$D_{KLnorm}(P||Q)=log(\frac{N_{Q}}{N_{P}})\sum_{x \in [aminoacids]} P(x) log(\frac{P(x)}{Q(x)}),$$
+
+
+
+
+
+Next, since we have multiple positions in the ancestral reconstruction, we will define the set of divergences of the same length as the sequence for MRCA protein.
+
+$$D_{KLclust}=[D_{KL,1},..,D_{KL,lenSeq}]$$
+
+
+
+```{r}
+kl.div <- function(p,q) { 
+  klb = 1*colSums(p*log(p/q)) 
+  return(klb)
+}
+```
+
+KL divergence is unidirectional metric. Next we define a bidirectional metric called the Jensen Shannon Divergence  for a single position.
+
+$$D_{JS}(P||Q)=\frac{1}{2}D_K(P||M)+\frac{1}{2}D_K(Q||M)$$
+Where M is the mean probability between P and Q.
+$$M=mean(P,Q)=\frac{P+Q}{2}$$
+
+Next, since we have multiple positions in the ancestral reconstruction, we will define the set of Jensen Shannon divergences of the same length as the sequence for MRCA protein.
+
+$$D_{JSclust}=[D_{JS,1},..,D_{JS,lenSeq}]$$
+
+
+```{r}
+
+JSD.div <- function(p,q) {               
+  M = (p+q)/2
+  JSD <- 0.5*kl.div(p,M)+0.5*kl.div(q,M)
+  
+  return(JSD)
+}
+```
+
+With divergences defined we can calculate the divergence of each subfamilies' MRCA to is parent or sister node. 
+
+This next code chunk will pull the top 30 divergence positions for each subfamily. Plotting ....***************
+At the end, there will be mean and std divergence for all subfamilies 
+
+```{r}
+
+difference = c()
+numsig = 0
+numtested=0
+#AMINO ACIDS
+for (n in unique(clades$Cluster))
+  {
+  # subfam MRCA node in comparison to what node 
+  Node = 'parent'
+  print('cluster eval')
+  print(n)
+
+
+  
+  #pull current cluster
+  isClust<-clades$Cluster==n
+  isClustLabel <- clades[isClust,]$Label
+  print(isClust)
+  print(isClustLabel)
+  isintree <- tree$tip.label%in%isClustLabel
+  print(length(which(isintree)) )
+  #if not a singleton
+  if (length(which(isintree)) >2){
+    numtested = numtested+1
+    print(mrca.phylo(tree,which(isintree)))
+    mrcaClust <- mrca.phylo(tree,which(isintree))
+    parentMRCA <- Ancestors(tree, mrcaClust, type = "parent")
+    sisMRCA <- Siblings(tree, mrcaClust)
+    Nclust <- Descendants(tree,mrcaClust)
+    Nparent <- Descendants(tree,parentMRCA)
+    Nsis <- Descendants(tree,sisMRCA)
+  print(isClustLabel)
+
+    
+    if ( is.null(parentMRCA))
+    {
+      print('passparent')
+    } else  {
+      
+      #node MCRA
+      matrixA <- t(subset(anc.bayes,mrcaClust)[[1]])
+      rownames(matrixA)<- levels(OMP)
+      
+      #node parent MRCA
+      matrixB <- t(subset(anc.bayes,parentMRCA)[[1]])
+      rownames(matrixB)<- levels(OMP)
+      
+      #JSD divergence
+      JSDclust = JSD.div(matrixA,matrixB)
+      
+      #sort JSD 
+      lst <- sort(JSDclust, index.return=TRUE, decreasing=T)
+      #select top 40 characters
+      lapply(lst, `[`, lst$x %in% head(unique(lst$x),40))#[1:40]
+      
+      #rab ow many
+      NN <- dim(matrixA)[2]*0.1
+      print(NN)
+      NNrab <- as.integer(NN)+1
+      print(NNrab)
+      
+      #selected positions
+      selectcols<-lapply(lst, `[`, lst$x %in% head(unique(lst$x),NNrab))$ix[1:NNrab]
+      #selected JSD
+      selectedJSD <-lapply(lst, `[`, lst$x %in% head(unique(lst$x),NNrab))$x[1:NNrab]
+      
+
+      matrixA <- t(subset(anc.bayes,mrcaClust, select=selectcols)[[1]])
+      rownames(matrixA)<- levels(OMP)
+      colnames(matrixA)<- as.numeric(selectcols)
+      grab<-colnames(matrixA)[order(nchar(colnames(matrixA)),colnames(matrixA))]
+
+      grabbed <- as.character(which(OMPindex %in% (grab)))
+      grabbed<- as.character(match(grab,OMPindex))
+      x='site'
+      y='grabbed'
+      grabswap = data.frame(grab,grabbed)
+      names(grabswap) = c(x,y)
+      
+      #make append sites wit te same car pattern 
+        
+      matrixB <- t(subset(anc.bayes,parentMRCA, select=selectcols)[[1]])
+      rownames(matrixB)<- levels(OMP)
+      
+      
+      JSDclust[JSDclust=='NaN'] = 0
+      
+      #matrixC
+      matrixC <- t(subset(anc.bayes,sisMRCA, select=selectcols)[[1]])
+      rownames(matrixC)<- levels(OMP)
+      NodeC = 'sister'
+      
+      
+      #use sister node in place of parent node if JSD is insufficent 
+      if(max(JSDclust)<0.01){
+        #node MCRA
+        matrixA <- t(subset(anc.bayes,mrcaClust)[[1]])
+        rownames(matrixA)<- levels(OMP)
+        #node parent MRCA
+        matrixB <- t(subset(anc.bayes,sisMRCA)[[1]])
+        rownames(matrixB)<- levels(OMP)
+        #JSD divergence
+        JSDclust = JSD.div(matrixA,matrixB)
+
+        #selected positions
+        selectcols<-lapply(lst, `[`, lst$x %in% head(unique(lst$x),NNrab))$ix[1:NNrab]
+        #selected JSD
+        selectedJSD <-lapply(lst, `[`, lst$x %in% head(unique(lst$x),NNrab))$x[1:NNrab]
+        
+  
+        matrixA <- t(subset(anc.bayes,mrcaClust, select=selectcols)[[1]])
+        rownames(matrixA)<- levels(OMP)
+        colnames(matrixA)<- as.numeric(selectcols)
+        grab<-colnames(matrixA)[order(nchar(colnames(matrixA)),colnames(matrixA))]
+  
+        grabbed <- as.character(which(OMPindex %in% (grab)))
+        grabbed<- as.character(match(grab,OMPindex))
+        x='site'
+        y='grabbed'
+        grabswap = data.frame(grab,grabbed)
+        names(grabswap) = c(x,y)
+        
+        matrixB <- t(subset(anc.bayes,sisMRCA, select=selectcols)[[1]])
+        rownames(matrixB)<- levels(OMP)
+
+        
+        Node = 'sister'
+
+        #matrixC
+        matrixC <- t(subset(anc.bayes,parentMRCA, select=selectcols)[[1]])
+        rownames(matrixC)<- levels(OMP)
+        NodeC = 'parent'
+      }
+      
+      #difference and append
+      diff<-mean(selectedJSD)-mean(JSDclust)
+      difference <- c(difference,diff)
+      
+      barplot(JSDclust,
+              # border = "#69b3a2",
+              col='darkgreen',
+              xlab='Multiple Sequence Aligment position',
+              ylab='Jensen Shannon Divergence',
+              main='Jensen Shannon Divergence per site',
+              # Base R barchart with manual y-axis
+        ylim = c(0, 1))
+      
+      
+      jpeg(file=paste('../data/',FAM,'colored/',FAM,'_clust_JSDiverg_',n,'_dt_05-31-2022.png',sep = ''))
+      barplot(JSDclust,
+             # border = "#69b3a2",
+             col='darkgreen',
+             xlab='Multiple Sequence Aligment position',
+              ylab='Jensen Shannon Divergence',
+              main='Jensen Shannon Divergence per site',
+             # Base R barchart with manual y-axis
+        ylim = c(0, 1))
+      dev.off()
+      
+      svglite(file=paste('../data/',FAM,'colored/',FAM,'_clust_JSDiverg_',n,'_dt_05-31-2022.svg',sep = ''))
+      barplot(JSDclust,
+             # border = "#69b3a2",
+             col='darkgreen',
+             xlab='Multiple Sequence Aligment position',
+              ylab='Jensen Shannon Divergence',
+              main='Jensen Shannon Divergence per site',                         # Base R barchart with manual y-axis
+        ylim = c(0, 1))
+      dev.off()
+
+      pvalsite = c()
+      site <- c()
+      for (ii in seq(length(matrixA[1,])))
+      {
+        # print("Site")
+        # print(colnames(matrixA)[ii])
+        sites <- matrix(c(matrixA[,ii] * length(isClustLabel),#
+                                             
+                        matrixB[,ii] * length(Nparent[[1]])),#
+                                             
+                      ncol=length(levels(OMP)),
+                      byrow=TRUE)
+      colnames(sites) <- levels(OMP)
+      rownames(sites) <- c("MRCA",Node)
+      sites <- as.table(sites)
+      sites
+      #chisq.test(sites)
+      if (sum(is.na(sites))!=42){
+        test<-fisher.test(sites,workspace = 20000000)
+        site = c(site,colnames(matrixA)[ii])
+        pvalsite = c(pvalsite,test$p.value)
+      }
+      
+      }
+      print(site)
+      print(pvalsite)
+      pval.df = data.frame(site,pvalsite)
+      pval.df = FDR(pvalues = pval.df)
+      
+      pval.dfa = as.data.frame(pval.df$exclude)
+      pval.dfa$site = rownames(pval.dfa)
+      pval.dfb = as.data.frame(pval.df$select)
+      pval.dfb$site = rownames(pval.dfb)
+      
+      pval.df$exclude
+      pval.df$select
+      numsig <- numsig + length(pval.df$select$p.adjusted)
+      pval.df <- rbind(pval.dfa,
+                       pval.dfb)
+      
+      
+      
+      pval.df$sig = pval.df$p.adjusted <0.05
+      pval.df$sigcode = ''
+      pval.df$sigcode[pval.df$p.adjusted<0.05] = '*'
+      pval.df$sigcode[pval.df$p.adjusted<0.01] = '**'
+      pval.df$sigcode[pval.df$p.adjusted<0.001] = '***'
+      
+      
+      pval.df= merge(pval.df,grabswap,by='site')
+
+      
+      
+      
+      
+      a<-ggplot() + 
+        geom_logo( matrixA,seq_type = 'AA',method = 'prob') + 
+        ggtitle(paste(FAM,'cluster:',n))+
+        theme_logo()+scale_x_discrete(limits=grabbed)+
+        annotate("text", x = pval.df$grabbed, y = 1.01, label = pval.df$sigcode)
+      print(a)
+      b<-a
+      ggsave(paste('../data/',FAM,'colored/',FAM,'_clust',n,'_dt_05-31-2022b.svg',sep = ''),
+            scale = 0.8,
+            width = 25,
+            height = 2.5)
+      
+      
+      a<-ggplot() + 
+        geom_logo( matrixB,seq_type = 'AA',method = 'prob') + 
+        ggtitle(paste(FAM,'cluster',Node,':',n))+
+        theme_logo()+
+        scale_x_discrete(limits=grabbed)+
+        annotate("text", x = pval.df$grabbed, y = 1.01, label = pval.df$sigcode)
+      
+      print(a)
+      
+      ggsave(paste('../data/',FAM,'colored/',FAM,'_clust_ancenstor',Node,'OF_',n,'_dt_05-31-2022b.svg',sep = ''),
+            scale = 0.8,
+            width = 25,
+            height = 2.5)
+      
+      a<-ggplot() + 
+        geom_logo( matrixC,seq_type = 'AA',method = 'prob') + 
+        ggtitle(paste(FAM,'cluster',NodeC,':',n))+
+        theme_logo()+
+        scale_x_discrete(limits=grabbed)+
+        annotate("text", x = pval.df$grabbed, y = 1.01, label = pval.df$sigcode)
+      
+      print(a)
+      
+      ggsave(paste('../data/',FAM,'colored/',FAM,'_clust_ancenstor',NodeC,'OF_',n,'_dt_05-31-2022b.svg',sep = ''),
+            scale = 0.8,
+            width = 25,
+            height = 2.5)
+    }    
+  }
+
+  
+}
+print('use this number for table')
+print(numsig/NNrab/numtested*100)
+```
+
+
+
+```{r}
+pvalsite = c()
+site <- c()
+for (ii in seq(length(matrixA[1,])))
+{
+  # print("Site")
+  # print(colnames(matrixA)[ii])
+  sites <- matrix(c(matrixA[,ii] * length(isClustLabel),#
+                                       
+                  matrixB[,ii] * length(Nparent[[1]])),#
+                                       
+                ncol=length(levels(OMP)),
+                byrow=TRUE)
+colnames(sites) <- levels(OMP)
+rownames(sites) <- c("MRCA",Node)
+sites <- as.table(sites)
+sites
+#chisq.test(sites)
+test<-fisher.test(sites)
+site = c(site,colnames(matrixA)[ii])
+pvalsite = c(pvalsite,test$p.value)
+}
+print(site)
+print(pvalsite)
+pval.df = data.frame(site,pvalsite)
+pval.df = FDR(pvalues = pval.df)
+
+pval.dfa = as.data.frame(pval.df$exclude)
+pval.dfa$site = rownames(pval.dfa)
+pval.dfb = as.data.frame(pval.df$select)
+pval.dfb$site = rownames(pval.dfb)
+
+pval.df$exclude
+pval.df$select
+pval.df <- rbind(pval.dfa,
+                 pval.dfb)
+
+
+
+pval.df$sig = pval.df$p.adjusted <0.05
+pval.df$sigcode = ''
+pval.df$sigcode[pval.df$p.adjusted<0.05] = '*'
+pval.df$sigcode[pval.df$p.adjusted<0.01] = '**'
+pval.df$sigcode[pval.df$p.adjusted<0.001] = '***'
+
+
+pval.df= merge(pval.df,grabswap,by='site')
+
+
+```
+
+
+## Gaps
+Next we do the same analysis for gaps. This code chunk uses difference in parsimony character score instead of JSD divergence. This is done because parsimony scores are not probabilties, and scores of one and zero are common leading to JSD values of infinity and zero. 
+
+```{r}
+
+#with parsimony sisterstates not/is gaps
+for (n in unique(clades$Cluster))
+{
+  print(n)
+  
+  isClust<-clades$Cluster==n
+  isClustLabel <- clades[isClust,]$Label
+  print(clades[isClust,]$Label)
+  
+  isintree <- tree$tip.label%in%isClustLabel
+  #if not singleton cluster
+  if (length(which(isintree)) != 1){
+    
+    mrcaClust <- mrca.phylo(tree,which(isintree))
+    sisterMRCA <- Siblings(tree, mrcaClust, include.self = F)
+    
+    if ( is.null(parentMRCA))
+    {
+      print('passparent')
+    } else  {
+      
+      matrixA <- t(subset(gap.anc.mpr,mrcaClust)[[1]])
+      rownames(matrixA)<- levels(gaps)
+      
+      matrixB <- t(subset(gap.anc.mpr,sisterMRCA)[[1]])
+      rownames(matrixB)<- levels(gaps)
+      
+      #absolute difference of 
+      differ <- abs(matrixA - matrixB)
+      lst <- sort(differ['X',], index.return=TRUE, decreasing=T)
+      lapply(lst, `[`, lst$x %in% head(unique(lst$x),30))
+      
+      selectcols<-lapply(lst, `[`, lst$x %in% head(unique(lst$x),30))$ix[1:30]
+      selectedDIFF <-lapply(lst, `[`, lst$x %in% head(unique(lst$x),40))$x[1:40]
+      
+      
+      
+      matrixA <- t(subset(gap.anc.mpr,mrcaClust, select=selectcols)[[1]])
+      rownames(matrixA)<- levels(gaps)
+      colnames(matrixA)<- as.numeric(selectcols)
+      grab<-colnames(matrixA)[order(nchar(colnames(matrixA)),colnames(matrixA))]
+      grabbed <- gapsindex[as.numeric(grab)]
+
+      
+      matrixB <- t(subset(gap.anc.mpr,sisterMRCA, select=selectcols)[[1]])
+      rownames(matrixB)<- levels(gaps)
+      colnames(matrixB)<- as.numeric(selectcols)
+      
+
+      
+      a<-ggplot() + 
+        geom_logo( matrixA,method = 'p',namespace = 'OX') + 
+        ggtitle(paste(FAM,'cluster:',n))+
+        theme_logo()+
+        scale_x_discrete(limits=grab)
+      print(a)
+      # ggsave(paste('../data/',FAM,'colored/',FAM,'_clust_gaps',n,'_dt_01-18-2022.png',sep = '_'),
+      #        scale = 0.8,
+      #        width = 25,
+      #        height = 2.5)
+      
+      
+      a<-ggplot() + 
+        geom_logo( matrixB,method = 'p',namespace = 'OX') + 
+        ggtitle(paste(FAM,'cluster Sister:',n))+
+        theme_logo()+
+        scale_x_discrete(limits=grab)
+      print(a)
+      # ggsave(paste('../data/',FAM,'colored/',FAM,'_clust_anceOF_gaps',n,'_dt_01-18-2022.png',sep = '_'),
+      #        scale = 0.8,
+      #        width = 25,
+      #        height = 2.5)
+      
+    }    
+  }
+
+}
+```
+
+
