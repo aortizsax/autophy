@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 ##############################################################################
-## Copyright (c) 2023 Jeet Sukumaran.
+## Copyright (c) 2023 Adrian Ortiz.
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -34,22 +34,68 @@ import os
 import pathlib
 import sys
 import argparse
+from autophy.analyze.analysis import cluster
 
 def main():
     parser = argparse.ArgumentParser(description=None)
+#    parser.add_argument(
+ #           "src_paths",
+  #          action="store",
+   #         nargs="+",
+    #        metavar="FILE",
+     #       help="Path to source file(s).")
     parser.add_argument(
-            "src_paths",
+            "-a", "--alignment",
             action="store",
-            nargs="+",
-            metavar="FILE",
-            help="Path to source file(s).")
+            default="../data/OMPaln/2021-06-11_OMPuniprot_muscle.fasta",
+            help="Suffix for output files [default=%(default)s].")        
+    parser.add_argument(
+            "-t", "--tree",
+            action="store",
+            default="../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree",
+            help="Suffix for output files [default=%(default)s].")
+    parser.add_argument(
+            "-id", "--treeid",
+            action="store",
+            default="OMP",
+            help="Suffix for output files [default=%(default)s].")
+    parser.add_argument(
+            "-d", "--database",
+            action="store",
+            default="OMP",
+            help="Suffix for output files [default=%(default)s].")
+    parser.add_argument(
+            "-H", "--height",
+            action="store",
+            default="22",
+            help="Suffix for output files [default=%(default)s].")
     parser.add_argument(
             "-o", "--output-prefix",
             action="store",
-            default="output",
-            help="Prefix for output files [default=%(default)s].")
+            default="umapgmmemm",
+            help="Suffix for output files [default=%(default)s].")
     args = parser.parse_args()
     print("Hello, world.")
+    print(dir(args))
+    
+#    'alignment', 'database', 'height', 'output_prefix', 'tree', 'treeid'
+    
+    alignment = args.alignment
+    database = args.database
+    height = args.height
+    output_prefix = args.output_prefix
+    treefile = args.tree
+    treeid = args.treeid
+     
+    cluster(alignment, database, height, output_prefix, treefile, treeid)
+    #ALNPATH = "../data/OMPaln/2021-06-11_OMPuniprot_muscle.fasta"
+    #TREEPATH = "../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree"
+    #OUTTREE = "../data/uniprottrees/uniprotOMP_muscle_cah_umapemm.tree"
+    #Naln=1230
+    #TREEID='OMP'#'uniprot'
+    #FAM = 'uniprot'#'OMP'
+    #HEIGHT = 22
+
 
 if __name__ == '__main__':
     main()
