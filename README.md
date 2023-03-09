@@ -9,9 +9,7 @@ libary.  DendroPy can thus function as a stand-alone library for phylogenetics,
 a component of more complex multi-library phyloinformatic pipelines, or as a
 scripting "glue" that assembles and drives such pipelines.
 
-The primary home page for DendroPy, with detailed tutorials and documentation, is at:
-
-    http://dendropy.org/
+The primary home page for 
 
 ## Requirements and Installation
 =============================
