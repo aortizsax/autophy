@@ -29,7 +29,11 @@ $ cd autophy
 ```
 
 ```bash
-$ conda create autophy
+$ conda create -n autophy
+```
+
+```bash
+$ conda activate autophy
 ```
 
 ```bash
@@ -37,7 +41,7 @@ $ pip install .
 ```
 
 ```bash
-$ autophy 
+$ autophy -h
 ```
 
 ## Documentation
