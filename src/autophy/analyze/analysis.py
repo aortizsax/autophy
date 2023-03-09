@@ -20,7 +20,7 @@
 ## THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ## ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 ## WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-## DISCLAIMED. IN NO EVENT SHALL JEET SUKUMARAN BE LIABLE FOR ANY DIRECT,
+## DISCLAIMED. IN NO EVENT SHALL ADRIAN ORTIZ-VELEZ BE LIABLE FOR ANY DIRECT,
 ## INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 ## BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 ## DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -101,7 +101,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     OUTTREE = 'tree'+treeid+database+output_prefix+'.tree'
     TREEID = treeid
     FAM = database
-    HEIGHT = 33#height
+    HEIGHT = 25#height
     # =============================================================================
     # TREEPATH = "../data/nextstraintrees/nextstrain_mumps_na_timetree.nwk"
     # OUTTREE = "../data/nextstraintrees/nextstrain_mumps_umapemm.tree"
@@ -196,7 +196,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
 
     #n neighbors like tsneq
     n_Hs = [15]#int(len(taxons)*3/4),
-    n_Hs = [15]#int(len(taxons)*3/4),
+    n_Hs = [10]#int(len(taxons)*3/4),
 
 
     for n_H in n_Hs:
@@ -225,7 +225,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
             embedding[:, 0],
             embedding[:, 1])
         plt.title('UMAP projection of the phylogenetic dataset')
-        plt.savefig('../data/EMMplots/2022-06-b22_'+str(n_H)+'_ogUMAPprog'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
+        plt.savefig('../data/EMMplots/2023-03-07_'+str(n_H)+'_ogUMAPprog'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
         
         plt.show()
         
@@ -988,10 +988,10 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
         plt.ylim(min(embedding[:,1])-0.2,max(embedding[:,1])+0.2)
         plt.title('Selected GMM: full model, '+ str(clf.n_components) +' Gaussian components')
         plt.subplots_adjust(hspace=.35, bottom=.02)
-        plt.savefig('../data/EMMplots/2022-06-b22_'+str(n_H)+'_GMMsweep_'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
+        plt.savefig('../data/EMMplots/2023-03-07_'+str(n_H)+'_GMMsweep_'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
         plt.show()
 
-        OUTF="../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+"_colored_RF.csv"
+        OUTF="../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+"_colored_RF.csv"
         print(OUTF)
         import csv
         with open(OUTF,'w') as f :
@@ -1012,7 +1012,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
                     writer.writerow([val,k,BPcolors[i%len(BPcolors)],k1,treeViewColor[k1]])
                 i+=1
 
-        OUTF="../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+"_coloredPASSONE.csv"
+        OUTF="../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+"_coloredPASSONE.csv"
         with open(OUTF,'w') as f :
             writer=csv.writer(f)
             writer.writerow(['Label','Cluster','Color'])
@@ -1096,7 +1096,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
             plt.rc('ytick', labelsize=18)    # fontsize of the tick labels
             plt.rc('figure', titlesize=18)   # fontsize of the figure title
             Phylo.draw(reclustBPtree,axes=axes,do_show=False,branch_labels=None)
-            plt.savefig("../data/"+FAM+"colored/2022-06-b22_"+str(n_H)+"_EMClust_"+FAM+TREEID+"_"+metric+"_coloredtree.svg",format='svg',dpi=600)
+            plt.savefig("../data/"+FAM+"colored/2023-03-07_"+str(n_H)+"_EMClust_"+FAM+TREEID+"_"+metric+"_coloredtree.svg",format='svg',dpi=600)
             plt.show()
         
 
@@ -1134,7 +1134,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
             )
 
     tree.ladderize()
-    Y_table = pd.read_csv("../data/"+FAM+"colored/2022-06-b22"+
+    Y_table = pd.read_csv("../data/"+FAM+"colored/2023-03-07"+
                           FAM+TREEID+"_colored_RF.csv",
                           dtype='string')
 
@@ -1370,7 +1370,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
 
     plt.legend()
 
-    plt.savefig("../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+"_subBAR_MPD.svg",
+    plt.savefig("../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+"_subBAR_MPD.svg",
                 format='svg')
     plt.show()
 
@@ -1400,7 +1400,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     plt.xlabel('Log Odd Tree Mean Pairwise Distance')
     plt.ylabel('Log Odd Parent Mean Pairwise Distance')
 
-    plt.savefig("../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+
+    plt.savefig("../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+
                 "_subpar_MPD_scatter.svg",
                 format='svg')
     plt.show()
@@ -1408,7 +1408,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     # =============================================================================
     # 
     # =============================================================================
-    Y_table = pd.read_csv("../data/"+FAM+"colored/2022-06-b22"+
+    Y_table = pd.read_csv("../data/"+FAM+"colored/2023-03-07"+
                           FAM+TREEID+"_coloredPASSONE.csv",
                           dtype='string')
     clusters = Y_table[['Label','Cluster']]
@@ -1615,7 +1615,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
 
     plt.legend()
 
-    plt.savefig("../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+"_sPASONEubBAR_MPD.svg",
+    plt.savefig("../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+"_sPASONEubBAR_MPD.svg",
                 format='svg')
     plt.show()
 
@@ -1754,7 +1754,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     #     #         plt.ylim(min(embedding[:,1])-0.2,max(embedding[:,1])+0.2)
     #     #         plt.title('Selected GMM: full model, '+ str(clf.n_components) +' Gaussian components')
     #     #         plt.subplots_adjust(hspace=.35, bottom=.02)
-    #     #         plt.savefig('../data/EMMplots/2022-06-b22_PASS2'+f2.split('|')[-1]+str(n_H)+'_GMMsweep_'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
+    #     #         plt.savefig('../data/EMMplots/2023-03-07_PASS2'+f2.split('|')[-1]+str(n_H)+'_GMMsweep_'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
     #     #         plt.show()
     #     #         
     #     # =============================================================================
@@ -2224,7 +2224,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     # fig = ax.get_figure()
     # 
     # fig.legend(loc='lower right')
-    # fig.savefig('../data/'+FAM+'colored/2022-06-b22_'+FAM+TREEID+'_RFClassimportance.svg',dpi=600,format='svg')  
+    # fig.savefig('../data/'+FAM+'colored/2023-03-07_'+FAM+TREEID+'_RFClassimportance.svg',dpi=600,format='svg')  
     # fig.show()
     # 
     # 
@@ -2265,7 +2265,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     # 
     # pprint.pprint(dictpred)
     # 
-    # OUTF="../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+"_colored_RF.csv"
+    # OUTF="../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+"_colored_RF.csv"
     # print(OUTF)
     # import csv
     # with open(OUTF,'w') as f :
@@ -2322,7 +2322,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     # 
     # 
     # 
-    # OUTF="../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+"_coloredPASSONE.csv"
+    # OUTF="../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+"_coloredPASSONE.csv"
     # print(OUTF)
     # import csv
     # with open(OUTF,'w') as f :
@@ -2396,7 +2396,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     # plt.ylim(min(embedding[:,1])-0.2,max(embedding[:,1])+0.2)
     # plt.title('Selected GMM: full model, '+ str(clf.n_components) +' Gaussian components')
     # plt.subplots_adjust(hspace=.35, bottom=.02)
-    # plt.savefig('../data/EMMplots/2022-06-b22_'+str(n_H)+'_GMMsweep_'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
+    # plt.savefig('../data/EMMplots/2023-03-07_'+str(n_H)+'_GMMsweep_'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
     # plt.show()
     # 
     # plt.figure(figsize=(7,3.9))
@@ -2404,7 +2404,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     #     embedding[:, 0],
     #     embedding[:, 1])
     # plt.title('UMAP projection of the phylogenetic dataset')
-    # plt.savefig('../data/EMMplots/2022-06-b22_'+str(n_H)+'_ogUMAPprog'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
+    # plt.savefig('../data/EMMplots/2023-03-07_'+str(n_H)+'_ogUMAPprog'+FAM+TREEID+'_'+metric+'.svg',dpi=600,format='svg')
     # 
     # plt.show()
     # 
@@ -2458,7 +2458,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     #     plt.rc('ytick', labelsize=18)    # fontsize of the tick labels
     #     plt.rc('figure', titlesize=18)   # fontsize of the figure title
     #     Phylo.draw(reclustBPtree,axes=axes,do_show=False,branch_labels=None)
-    #     plt.savefig("../data/"+FAM+"colored/2022-06-b22_"+str(n_H)+"_EMClust_"+FAM+TREEID+"_"+metric+"_coloredtree.svg",format='svg',dpi=600)
+    #     plt.savefig("../data/"+FAM+"colored/2023-03-07_"+str(n_H)+"_EMClust_"+FAM+TREEID+"_"+metric+"_coloredtree.svg",format='svg',dpi=600)
     #     plt.show()
     # 
     # #make target vector
@@ -2542,7 +2542,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid):
     #     
     # 
     # eteTree.show(tree_style=ts)
-    # eteTree.render("../data/"+FAM+"colored/2022-06-b22"+FAM+TREEID+"_colored.svg", tree_style=ts,dpi=600)
+    # eteTree.render("../data/"+FAM+"colored/2023-03-07"+FAM+TREEID+"_colored.svg", tree_style=ts,dpi=600)
     # 
     #     
     # 
