@@ -36,8 +36,8 @@ __project__ = re.match(
 setup(
     name=__project__,
     version=__version__,
-    author="Jeet Sukumaran",
-    author_email="jeetsukumaran@gmail.com",
+    author="Adrian Ortiz-Velez",
+    author_email="aortizsax@gmail.com",
     packages=find_packages("src"),
     package_dir={"": "src"},
     entry_points={
@@ -70,7 +70,7 @@ setup(
     },
     test_suite="tests",
     # url="http://pypi.python.org/pypi/autophy",
-    url="https://github.com/jeetsukumaran/autophy",
+    url="https://github.com/aortizsax/autophy",
     license="LICENSE",
     description="A Project",
     long_description=_read(["README.md"]),
