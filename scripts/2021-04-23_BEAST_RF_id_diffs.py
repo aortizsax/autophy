@@ -7,7 +7,7 @@ Created on Mon Jan 25 11:37:51 2021
 
 import dendropy
 
-import statistics 
+import statistics
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,33 +26,33 @@ from sklearn.metrics import roc_curve, auc
 from prettytable import PrettyTable
 
 
-#open aln do random forest ################get pdist for location
-# investigate gaps 
+# open aln do random forest ################get pdist for location
+# investigate gaps
 
-#make matrix 
-#row taxons
-#columns are locations of gaps
+# make matrix
+# row taxons
+# columns are locations of gaps
 
 
 ALNPATH = "../data/viralaln/sarscov2sgly_muscle_x.nexus"
 ALNPATH = "../data/viralaln/sarscov2sgly_muscle.fasta"
-#TREEPATH = "../data/viraltrees/sarscov2sgly_muscle_x_cah.tree"
+# TREEPATH = "../data/viraltrees/sarscov2sgly_muscle_x_cah.tree"
 TREEPATH = "../data/viraltrees/clustered/2021-04-29_sarscov2sgly_umapemm.nwk"
 N = 1300
-FAM = 'viral'
+FAM = "viral"
 # =============================================================================
-# 
+#
 # ALNPATH = "../data/BSHaln/2021-03-21_BSH_filtered_muscle.fasta"
 # TREEPATH ="../data/BSHtree/clustered/2021-04-29_BSH_filterd_BEAST_umapemm.nwk"
 # N=417
 # FAM = 'BSH'
-# 
+#
 # =============================================================================
 
 ALNPATH = "../data/OMPaln/2021-03-21_OMPuniprot_muscle.fasta"
-TREEPATH ="../data/OMPtree/2021-06-17_OMPuniprot_muscle_umapemm.tree"
-N=1230
-FAM = 'OMP'
+TREEPATH = "../data/OMPtree/2021-06-17_OMPuniprot_muscle_umapemm.tree"
+N = 1230
+FAM = "OMP"
 
 # =============================================================================
 # ALNPATH = "../data/pfamaln/PF00005_seed.txt"
@@ -81,10 +81,10 @@ treeOR = dendropy.Tree.get(
     suppress_leaf_node_taxa=False,
     terminating_semicolon_required=True,
     ignore_unrecognized_keyword_arguments=False,
-    )
+)
 treeOR.ladderize()
 
-fileType = 'a'
+fileType = "a"
 i = 0
 taxons = []
 catDict = {}
@@ -93,13 +93,13 @@ for taxon in treeOR.taxon_namespace:
     print(taxon)
     print()
     taxons.append(str(taxon)[1:-1])
-    
-# =============================================================================
-#     catDict[str(taxon)[1:-1][:-2]] = str(taxon)[1:-1]
-# =============================================================================
-    catDict['|'.join(str(taxon)[1:-1].split('|')[:-1])] = str(taxon)[1:-1]
-    
-    
+
+    # =============================================================================
+    #     catDict[str(taxon)[1:-1][:-2]] = str(taxon)[1:-1]
+    # =============================================================================
+    catDict["|".join(str(taxon)[1:-1].split("|")[:-1])] = str(taxon)[1:-1]
+
+
 # =============================================================================
 # print(len(taxons))
 # print((catDict))
@@ -110,15 +110,15 @@ for taxon in treeOR.taxon_namespace:
 
 #'0': ['A', 'P', 'T'],
 dict0 = {}
-#'1': ['C', 'F', 'W', 'Y'], 
+#'1': ['C', 'F', 'W', 'Y'],
 dict1 = {}
-#'2': ['D', 'E'], 
+#'2': ['D', 'E'],
 dict2 = {}
-#'3': ['I', 'L', 'M', 'V'], 
+#'3': ['I', 'L', 'M', 'V'],
 dict3 = {}
-#'4': ['H', 'K'], 
+#'4': ['H', 'K'],
 dict4 = {}
-#'5': ['R', 'Q'], 
+#'5': ['R', 'Q'],
 dict5 = {}
 #'6': ['N', 'G', 'S']
 dict6 = {}
@@ -128,159 +128,157 @@ seqCount = -1
 taxa = []
 alnDict = {}
 
-gapsDict['clust'] = []
-for i in range(N+1):
-    gapsDict[i]=[0]*(len(taxons))
-    dict0[str(i)+'APT']=[0]*(len(taxons))
-    dict1[str(i)+'CFWY']=[0]*(len(taxons))
-    dict2[str(i)+'DE']   =[0]*(len(taxons))
-    dict3[str(i)+'ILMV']=[0]*(len(taxons))
-    dict4[str(i)+'HK']=[0]*(len(taxons))
-    dict5[str(i)+'RQ']=[0]*(len(taxons))
-    dict6[str(i)+'NGS']=[0]*(len(taxons))
+gapsDict["clust"] = []
+for i in range(N + 1):
+    gapsDict[i] = [0] * (len(taxons))
+    dict0[str(i) + "APT"] = [0] * (len(taxons))
+    dict1[str(i) + "CFWY"] = [0] * (len(taxons))
+    dict2[str(i) + "DE"] = [0] * (len(taxons))
+    dict3[str(i) + "ILMV"] = [0] * (len(taxons))
+    dict4[str(i) + "HK"] = [0] * (len(taxons))
+    dict5[str(i) + "RQ"] = [0] * (len(taxons))
+    dict6[str(i) + "NGS"] = [0] * (len(taxons))
 
 
-
-if (ALNPATH[-5:] == "fasta")|(ALNPATH[-3:] == "txt"):
-        
-    with open(ALNPATH,'r') as reader:
+if (ALNPATH[-5:] == "fasta") | (ALNPATH[-3:] == "txt"):
+    with open(ALNPATH, "r") as reader:
         for l in reader:
-            l=l.strip()
+            l = l.strip()
             print(l)
 
-            if l[0] == '>':
+            if l[0] == ">":
                 seqCount += 1
                 print(catDict)
                 taxon = catDict[l.strip()[1:].split(" ")[0]]
-                gapsDict['clust'].append(taxon.split("|")[-1])
-                print(taxon,seqCount)
+                gapsDict["clust"].append(taxon.split("|")[-1])
+                print(taxon, seqCount)
                 taxa.append(taxon)
-                
+
                 counter = 0
-                line = ''
+                line = ""
             else:
-                #print(l)
+                # print(l)
                 line = l
-            
+
             gapCounter = 0
-            
+
             for char in line:
-                if char == '-':
-                #if (char == 'H') | (char == 'K'):
-                    gapCounter+=1
+                if char == "-":
+                    # if (char == 'H') | (char == 'K'):
+                    gapCounter += 1
                     gapsDict[counter][seqCount] = gapCounter
-                elif (char == 'A') | (char == 'P') | (char == 'T'):
+                elif (char == "A") | (char == "P") | (char == "T"):
                     gapCounter = 0
-                    dict0[str(counter)+'APT'][seqCount] = 1
+                    dict0[str(counter) + "APT"][seqCount] = 1
 
-                elif (char == 'C') | (char == 'F') | (char == 'W') | (char == 'Y'):
+                elif (char == "C") | (char == "F") | (char == "W") | (char == "Y"):
                     gapCounter = 0
-                    dict1[str(counter)+'CFWY'][seqCount] = 1
+                    dict1[str(counter) + "CFWY"][seqCount] = 1
 
-                elif (char == 'D') | (char == 'E'):
+                elif (char == "D") | (char == "E"):
                     gapCounter = 0
-                    dict2[str(counter)+'DE'][seqCount] = 1
+                    dict2[str(counter) + "DE"][seqCount] = 1
 
-                elif (char == 'I') | (char == 'L') | (char == 'V') | (char == 'M'):
+                elif (char == "I") | (char == "L") | (char == "V") | (char == "M"):
                     gapCounter = 0
-                    dict3[str(counter)+'ILMV'][seqCount] = 1
+                    dict3[str(counter) + "ILMV"][seqCount] = 1
 
-                elif (char == 'H') | (char == 'K'):
+                elif (char == "H") | (char == "K"):
                     gapCounter = 0
-                    dict4[str(counter)+'HK'][seqCount] = 1
+                    dict4[str(counter) + "HK"][seqCount] = 1
 
-                elif (char == 'R') | (char == 'Q'):
+                elif (char == "R") | (char == "Q"):
                     gapCounter = 0
-                    dict5[str(counter)+'RQ'][seqCount] = 1
-                
-                elif (char == 'N') | (char == 'G') | (char == 'S'):
+                    dict5[str(counter) + "RQ"][seqCount] = 1
+
+                elif (char == "N") | (char == "G") | (char == "S"):
                     gapCounter = 0
-                    dict6[str(counter)+'NGS'][seqCount] = 1
+                    dict6[str(counter) + "NGS"][seqCount] = 1
 
                 else:
                     gapCounter = 0
-                    
+
                 counter += 1
 
 
 # =============================================================================
 # print(gapsDict)
 # =============================================================================
-            
-                
+
+
 d = {}
-d['clust'] = gapsDict['clust']
+d["clust"] = gapsDict["clust"]
 for k in gapsDict.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(gapsDict[k]) != 0:
-            print(k,len(gapsDict[k]))
+            print(k, len(gapsDict[k]))
             medianGap = statistics.median(gapsDict[k])
             d[str(k)] = gapsDict[k]
 
             for i in range(len(gapsDict[k])):
-               d[str(k)][i] = int(d[str(k)][i] > 0)#medianGap)
-            #d[str(k)] = gapsDict[k]
+                d[str(k)][i] = int(d[str(k)][i] > 0)  # medianGap)
+            # d[str(k)] = gapsDict[k]
             if len(gapsDict[k]) != len(taxa):
-                print('woah')
-                print(k,len(gapsDict[k]))
+                print("woah")
+                print(k, len(gapsDict[k]))
 
-d0={}
+d0 = {}
 for k in dict0.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(dict0[k]) != 0:
             d0[str(k)] = dict0[k]
 
-d1={}
+d1 = {}
 for k in dict1.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(dict1[k]) != 0:
             d1[str(k)] = dict1[k]
-d2={}
+d2 = {}
 for k in dict2.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(dict2[k]) != 0:
             d2[str(k)] = dict2[k]
 
-d3={}
+d3 = {}
 for k in dict3.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(dict3[k]) != 0:
             d3[str(k)] = dict3[k]
-   
-d4={}
+
+d4 = {}
 for k in dict4.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(dict4[k]) != 0:
             d4[str(k)] = dict4[k]
-   
-d5={}
+
+d5 = {}
 for k in dict5.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(dict5[k]) != 0:
             d5[str(k)] = dict5[k]
 
-d6={}
+d6 = {}
 for k in dict6.keys():
-    if k != 'clust':
+    if k != "clust":
         if sum(dict6[k]) != 0:
             d6[str(k)] = dict6[k]
 
-print(len(taxa),taxa)
-df = pd.DataFrame(data=d,index=taxa)
-df0 = pd.DataFrame(data=d0,index=taxa)
-df1 = pd.DataFrame(data=d1,index=taxa)
-df2 = pd.DataFrame(data=d2,index=taxa)
-df3 = pd.DataFrame(data=d3,index=taxa)
-df4 = pd.DataFrame(data=d4,index=taxa)
-df5 = pd.DataFrame(data=d5,index=taxa)
-df6 = pd.DataFrame(data=d6,index=taxa)
-df = df.merge(df0,left_index=True,right_index=True)
-df = df.merge(df1,left_index=True,right_index=True)
-df = df.merge(df2,left_index=True,right_index=True)
-df = df.merge(df3,left_index=True,right_index=True)
-df = df.merge(df4,left_index=True,right_index=True)
-df = df.merge(df5,left_index=True,right_index=True)
-df = df.merge(df6,left_index=True,right_index=True)
+print(len(taxa), taxa)
+df = pd.DataFrame(data=d, index=taxa)
+df0 = pd.DataFrame(data=d0, index=taxa)
+df1 = pd.DataFrame(data=d1, index=taxa)
+df2 = pd.DataFrame(data=d2, index=taxa)
+df3 = pd.DataFrame(data=d3, index=taxa)
+df4 = pd.DataFrame(data=d4, index=taxa)
+df5 = pd.DataFrame(data=d5, index=taxa)
+df6 = pd.DataFrame(data=d6, index=taxa)
+df = df.merge(df0, left_index=True, right_index=True)
+df = df.merge(df1, left_index=True, right_index=True)
+df = df.merge(df2, left_index=True, right_index=True)
+df = df.merge(df3, left_index=True, right_index=True)
+df = df.merge(df4, left_index=True, right_index=True)
+df = df.merge(df5, left_index=True, right_index=True)
+df = df.merge(df6, left_index=True, right_index=True)
 
 print(df.index)
 for i in df.columns:
@@ -288,10 +286,9 @@ for i in df.columns:
 print(df.columns)
 
 
-
 # Split the Groups from the dataset where y is category and x is data with species
-y = df.iloc[:,0]
-x = df.iloc[:,1:]
+y = df.iloc[:, 0]
+x = df.iloc[:, 1:]
 
 print(y)
 print(x)
@@ -299,25 +296,30 @@ print(x)
 
 # Split the data into training and test data for the categories(y) and dataset(x)
 # Here we are spliting it 65% training and 35% test
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=.35, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.35, random_state=42
+)
 
 
 ensemble_clfs = [
-    ("RandomForestClassifier, max_features='sqrt'",
-        RandomForestClassifier(warm_start=True, 
-                               oob_score=True,
-                               max_features="sqrt", 
-                               random_state=42)),
-    ("RandomForestClassifier, max_features='log2'",
-        RandomForestClassifier(warm_start=True, 
-                               max_features='log2',
-                               oob_score=True, 
-                               random_state=42)),
-    ("RandomForestClassifier, max_features=None",
-        RandomForestClassifier(warm_start=True, 
-                               max_features=None,
-                               oob_score=True, 
-                               random_state=42))
+    (
+        "RandomForestClassifier, max_features='sqrt'",
+        RandomForestClassifier(
+            warm_start=True, oob_score=True, max_features="sqrt", random_state=42
+        ),
+    ),
+    (
+        "RandomForestClassifier, max_features='log2'",
+        RandomForestClassifier(
+            warm_start=True, max_features="log2", oob_score=True, random_state=42
+        ),
+    ),
+    (
+        "RandomForestClassifier, max_features=None",
+        RandomForestClassifier(
+            warm_start=True, max_features=None, oob_score=True, random_state=42
+        ),
+    ),
 ]
 
 # Map a classifier name to a list of (<n_estimators>, <error rate>) pairs.
@@ -349,147 +351,160 @@ plt.show()
 
 clf = RandomForestClassifier(n_estimators=70, max_features=None, random_state=42)
 all_accuracies = cross_val_score(estimator=clf, X=X_train, y=y_train, cv=5)
-print('Mean Validation Scores: ' ,end='')
+print("Mean Validation Scores: ", end="")
 print(np.mean(all_accuracies))
 
-clf_final = RandomForestClassifier(n_estimators=70, bootstrap=True,max_features=None,oob_score= True,
-                                   random_state= 42)
-clf_final.fit(X_train,y_train)
+clf_final = RandomForestClassifier(
+    n_estimators=70, bootstrap=True, max_features=None, oob_score=True, random_state=42
+)
+clf_final.fit(X_train, y_train)
 y_pred = clf_final.predict(X_test)
-print("Test Set Accuracy:",metrics.accuracy_score(y_test, y_pred))
+print("Test Set Accuracy:", metrics.accuracy_score(y_test, y_pred))
 
-#rf_probs = clf_final.predict_proba(X_test)[:, 1]
-#roc_value = roc_auc_score(y_test, rf_probs)
-#roc_value
+# rf_probs = clf_final.predict_proba(X_test)[:, 1]
+# roc_value = roc_auc_score(y_test, rf_probs)
+# roc_value
 
 print(clf_final.oob_score_)
 
-feats = {} # a dict to hold feature_name: feature_importance
+feats = {}  # a dict to hold feature_name: feature_importance
 for feature, importance in zip(df.columns, clf_final.feature_importances_):
-    feats[feature] = importance #add the name/value pair 
+    feats[feature] = importance  # add the name/value pair
 
-importances = pd.DataFrame.from_dict(feats, orient='index').rename(columns={0: 'Gini-importance'})
-imp=importances.sort_values(by='Gini-importance',ascending=False)
+importances = pd.DataFrame.from_dict(feats, orient="index").rename(
+    columns={0: "Gini-importance"}
+)
+imp = importances.sort_values(by="Gini-importance", ascending=False)
 print(imp.head(20))
 print(list(imp.index)[:20])
 alnImp = list(imp.index)[:20]
-imp.head(20).to_csv("../data/RF/2021-03-01_RF_"+FAM+".csv")
-
-
+imp.head(20).to_csv("../data/RF/2021-03-01_RF_" + FAM + ".csv")
 
 
 alnDict = {}
 
-#gapsDict['clust'] = []
+# gapsDict['clust'] = []
 for i in range(len(taxons)):
-    alnDict[i]=[0]*N
+    alnDict[i] = [0] * N
 
 
-with open(ALNPATH,'r') as reader:
+with open(ALNPATH, "r") as reader:
     for l in reader:
-       #print(l.strip())
+        # print(l.strip())
         line = l.strip()
-        if len(line)==0:
+        if len(line) == 0:
             pass
-        elif line[0] == '#' or line[0] == '>':
-            taxa = line[1:].replace('_','.')
- #           print(taxa)
-            alnDict[taxa] = ''
+        elif line[0] == "#" or line[0] == ">":
+            taxa = line[1:].replace("_", ".")
+            #           print(taxa)
+            alnDict[taxa] = ""
         else:
             alnDict[taxa] += line
 
-c=0
+c = 0
 for imp in alnImp:
     alnImp[c] = str(imp)
-    c+=1 
+    c += 1
 
 alnImp.sort()
-l=[]
-lDict={}
+l = []
+lDict = {}
 for taxon, aln in alnDict.items():
-    if type(taxon) == int or taxon == 'mega':
+    if type(taxon) == int or taxon == "mega":
         pass
     else:
-# =============================================================================
-#         print(taxon)
-#         print(taxon.strip().split(" ")[0])        
-# =============================================================================
-        taxon = taxon.strip().split(' ')[0]      
-# =============================================================================
-# 
-#         info=['>'+catDict[taxon[:]],
-#           aln[int(alnImp[0][:3])-5:int(alnImp[0][:3])+5],
-#           aln[int(alnImp[1])-5:int(alnImp[1])+5],
-#           aln[int(alnImp[2])-5:int(alnImp[2])+5],
-#           aln[int(alnImp[3])-5:int(alnImp[3])+5],
-#           aln[int(alnImp[4])-5:int(alnImp[4])+5]]
-# =============================================================================
-# =============================================================================
-#         l.append(info)
-# =============================================================================
-        toAppend=[]        
-# =============================================================================
-#         print('>'+catDict[taxon[:].replace('..','')])
-# =============================================================================
-        toAppend.append('>'+catDict[taxon[:].replace('..','')])
+        # =============================================================================
+        #         print(taxon)
+        #         print(taxon.strip().split(" ")[0])
+        # =============================================================================
+        taxon = taxon.strip().split(" ")[0]
+        # =============================================================================
+        #
+        #         info=['>'+catDict[taxon[:]],
+        #           aln[int(alnImp[0][:3])-5:int(alnImp[0][:3])+5],
+        #           aln[int(alnImp[1])-5:int(alnImp[1])+5],
+        #           aln[int(alnImp[2])-5:int(alnImp[2])+5],
+        #           aln[int(alnImp[3])-5:int(alnImp[3])+5],
+        #           aln[int(alnImp[4])-5:int(alnImp[4])+5]]
+        # =============================================================================
+        # =============================================================================
+        #         l.append(info)
+        # =============================================================================
+        toAppend = []
+        # =============================================================================
+        #         print('>'+catDict[taxon[:].replace('..','')])
+        # =============================================================================
+        toAppend.append(">" + catDict[taxon[:].replace("..", "")])
         for feat in alnImp:
-# =============================================================================
-#             print(feat)
-# =============================================================================
-            number = ''
+            # =============================================================================
+            #             print(feat)
+            # =============================================================================
+            number = ""
             for word in feat:
                 if word.isdigit():
-# =============================================================================
-#                     print(word)
-# =============================================================================
+                    # =============================================================================
+                    #                     print(word)
+                    # =============================================================================
                     number = number + word
-# =============================================================================
-#                     print(number)
-# =============================================================================
+            # =============================================================================
+            #                     print(number)
+            # =============================================================================
             number = str(number)
-            
-# =============================================================================
-#             print(number)
-# =============================================================================
-            
-# =============================================================================
-#             print(aln[int(number)-5:int(number)+5])
-# =============================================================================
-            toAppend.append(aln[int(number)-5:int(number)+4])
+
+            # =============================================================================
+            #             print(number)
+            # =============================================================================
+
+            # =============================================================================
+            #             print(aln[int(number)-5:int(number)+5])
+            # =============================================================================
+            toAppend.append(aln[int(number) - 5 : int(number) + 4])
         l.append(toAppend)
 
-        #fig gini imp 
-        #string order by cluster number
+        # fig gini imp
+        # string order by cluster number
 
 
-table = PrettyTable(['Name', alnImp[0],alnImp[1],alnImp[2], alnImp[3], alnImp[4],
-                     alnImp[5], alnImp[6], alnImp[7], alnImp[8], alnImp[9],
-                     alnImp[10], alnImp[11], alnImp[12], alnImp[13], alnImp[14],
-                     alnImp[15], alnImp[16], alnImp[17], alnImp[18], alnImp[19]
-# =============================================================================
-#                      ,
-#                      alnImp[20]
-# =============================================================================
-                     ])
+table = PrettyTable(
+    [
+        "Name",
+        alnImp[0],
+        alnImp[1],
+        alnImp[2],
+        alnImp[3],
+        alnImp[4],
+        alnImp[5],
+        alnImp[6],
+        alnImp[7],
+        alnImp[8],
+        alnImp[9],
+        alnImp[10],
+        alnImp[11],
+        alnImp[12],
+        alnImp[13],
+        alnImp[14],
+        alnImp[15],
+        alnImp[16],
+        alnImp[17],
+        alnImp[18],
+        alnImp[19]
+        # =============================================================================
+        #                      ,
+        #                      alnImp[20]
+        # =============================================================================
+    ]
+)
 
 for rec in l:
     table.add_row(rec)
-    
+
 print(table)
-    
-    
-    
-    
-    
+
+
 from sklearn import svm
+
 X = [[0, 0], [1, 1]]
 y = [0, 1]
 clf = svm.SVC()
 clf.fit(X, y)
-print(clf.predict([[2., 2.]]))
-
-
-
-
-
-
+print(clf.predict([[2.0, 2.0]]))
