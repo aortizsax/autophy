@@ -12,19 +12,19 @@ Created on Thu Jan  7 16:13:27 2021
 """
 from ete3 import Tree, faces, AttrFace, TreeStyle, NodeStyle
 import sys
-import dendropy 
+import dendropy
 import numpy as np
 import scipy.spatial.distance as ssd
 from sklearn.decomposition import PCA
-from sklearn import preprocessing 
+from sklearn import preprocessing
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn import mixture
-import itertools  
+import itertools
 from scipy import linalg
 import matplotlib as mpl
-from Bio import Phylo 
+from Bio import Phylo
 import matplotlib
 import re
 import numpy as np
@@ -38,12 +38,12 @@ import umap
 
 
 # =============================================================================
-# TREEPATH = "../../../../ChromeDownloads/nextstrain_dengue_denv1_timetree.nwk" 
+# TREEPATH = "../../../../ChromeDownloads/nextstrain_dengue_denv1_timetree.nwk"
 # OUTTREE = "../data/2021_flu.nwk"
 # FAM = 'FLU'
 # =============================================================================
 # =============================================================================
-# TREEPATH = "../../../Users/Adrian/Downloads/nextstrain_ncov_global_timetree.nwk" 
+# TREEPATH = "../../../Users/Adrian/Downloads/nextstrain_ncov_global_timetree.nwk"
 # OUTTREE = "../data/2021_rona.nwk"
 # FAM = 'RONA'
 # HEIGHT = 50
@@ -52,13 +52,11 @@ import umap
 
 TREEPATH = "../data/SPIKEtree/2021-01-24_SPIKE09_btsp50_ML.nwk"
 OUTTREE = "../data/SPIKEtree/clustered/2021-01-25_SPIKE09_ML.nwk"
-FAM = 'SPIKE'
+FAM = "SPIKE"
 HEIGHT = 22
 
 
-#make work with labels
-
-
+# make work with labels
 
 
 treeOR = dendropy.Tree.get(
@@ -73,7 +71,7 @@ treeOR = dendropy.Tree.get(
     suppress_edge_lengths=False,
     extract_comment_metadata=True,
     store_tree_weights=False,
-#    encode_splits=False,
+    #    encode_splits=False,
     finish_node_fn=None,
     case_sensitive_taxon_labels=False,
     preserve_underscores=False,
@@ -81,10 +79,10 @@ treeOR = dendropy.Tree.get(
     suppress_leaf_node_taxa=False,
     terminating_semicolon_required=True,
     ignore_unrecognized_keyword_arguments=False,
-    )
+)
 treeOR.ladderize()
-#treeOR.reroot_at_midpoint(update_bipartitions=False)
-#print(pdm.as_data_table())
+# treeOR.reroot_at_midpoint(update_bipartitions=False)
+# print(pdm.as_data_table())
 
 
 i = 0
@@ -92,41 +90,37 @@ taxons = []
 for taxon in treeOR.taxon_namespace:
     j = 0
     taxons.append(str(taxon)[1:-1])
-   
-    
-    
-    
-
-
 
 
 taxonsLabels = []
-repDict={}
+repDict = {}
 
-for i in range(0,len(taxons)):
-   # taxonsLabels.append(taxons[i].replace(' ','_')[1:-1])
-    #print(clf.predict(X)[i],taxons[i],BPcolors[clf.predict(X)[i]%len(BPcolors)]
-    #for tree label replacement
-    repDict[taxons[i]] = taxons[i].replace(' ','.')#.split(' ')[0].split('_')[0].replace(' ', '_')
-    #print(i,taxons[i],repDict[taxons[i]])
+for i in range(0, len(taxons)):
+    # taxonsLabels.append(taxons[i].replace(' ','_')[1:-1])
+    # print(clf.predict(X)[i],taxons[i],BPcolors[clf.predict(X)[i]%len(BPcolors)]
+    # for tree label replacement
+    repDict[taxons[i]] = taxons[i].replace(
+        " ", "."
+    )  # .split(' ')[0].split('_')[0].replace(' ', '_')
+    # print(i,taxons[i],repDict[taxons[i]])
 strTree = treeOR.as_string(schema="newick")
-strTree = re.sub('Inner[0-9][0-9][0-9]','', strTree)
-strTree = re.sub('Inner[0-9][0-9]','', strTree)
-strTree = re.sub('Inner[0-9]','', strTree)
-strTree = re.sub("'",'', strTree)
+strTree = re.sub("Inner[0-9][0-9][0-9]", "", strTree)
+strTree = re.sub("Inner[0-9][0-9]", "", strTree)
+strTree = re.sub("Inner[0-9]", "", strTree)
+strTree = re.sub("'", "", strTree)
 
 for key in repDict.items():
     print(key)
-    strTree = strTree.replace(key[0],key[1])
-    strTree = strTree.replace(key[0].replace('_',' '),key[1])
-print(strTree) 
+    strTree = strTree.replace(key[0], key[1])
+    strTree = strTree.replace(key[0].replace("_", " "), key[1])
+print(strTree)
 # =============================================================================
-# 
+#
 # EMtree_file = open(OUTTREE.replace('.nwk', 'shortid.nwk'),'w+')
 # n = EMtree_file.write(strTree)
 # EMtree_file.close()
-# 
-# 
+#
+#
 # tree = dendropy.Tree.get(
 #     path=OUTTREE.replace('.nwk', 'shortid.nwk'),
 #     schema="newick",
@@ -151,8 +145,8 @@ print(strTree)
 # tree.ladderize()
 # pdm = tree.phylogenetic_distance_matrix()
 # #print(pdm.as_data_table())
-# 
-# 
+#
+#
 # pdmA = np.zeros((len(tree.taxon_namespace),len(tree.taxon_namespace)+2))
 # counter = 0
 # print(pdmA.shape)
@@ -164,7 +158,7 @@ print(strTree)
 #     for taxon2 in tree.taxon_namespace:
 #         edgecount = float(pdm.path_edge_count(taxon,taxon2))
 #         pdmA[i,j] =  float(pdm.distance(taxon,taxon2))
-#                 
+#
 #         j+=1
 #     i+=1
 # bootcount = 0
@@ -190,47 +184,47 @@ print(strTree)
 # #         print(bootcount,str(node.taxon))#.split(' ')[0])
 # #         index = taxons.index(str(node.taxon)[1:-1])#.split(' ')[0])
 # #         pdmA[index,i] = bootcount
-# # 
+# #
 # # =============================================================================
 # print(pdmA)
-# 
+#
 # N=6
 # #pdist = ssd.pdist(pdmA)
 # print(taxons)
-# 
-# 
-# 
+#
+#
+#
 # metric = 'minkowski'
 # metrics = ['manhattan','minkowski','canberra','braycurtis',#'haversine',
 #            'mahalanobis','wminkowski','cosine']
 # n_Hs = [int(len(taxons)*3/4)]#[100,125,150,200]# [20,75,100,222]#[20,100,150,180,220,1000,2000,3000]
-# 
-# 
-# 
+#
+#
+#
 # #%matplotlib inline
-# 
+#
 # #sns.set(style='white', context='notebook', rc={'figure.figsize':(14,10)})
-# 
+#
 # penguins = pdmA# pd.read_csv("https://github.com/allisonhorst/palmerpenguins/raw/5b5891f01b52ae26ad8cb9755ec93672f49328a8/data/penguins_size.csv")
 # print(pdmA)
-# 
+#
 # #sns.pairplot(penguins, hue='species_short')
-# 
+#
 # for n_H in n_Hs:
 #     print("metric:",n_H)
-#     reducer = umap.UMAP(n_components=N,    
+#     reducer = umap.UMAP(n_components=N,
 #                         n_neighbors=n_H,
 #                         min_dist=0.0,
 #                         random_state=42,
 #                         metric = metric)
-#     
-#     
+#
+#
 #     penguin_data = pdmA
 #     scaled_penguin_data = StandardScaler().fit_transform(penguin_data)
-#     
+#
 #     embedding = reducer.fit_transform(scaled_penguin_data)
 #     #print(embedding.shape)
-#     
+#
 #     plt.scatter(
 #         embedding[:, 0],
 #         embedding[:, 1])#,
@@ -238,26 +232,26 @@ print(strTree)
 #     #plt.gca().set_aspect('equal', 'box')
 #     plt.title('UMAP projection of the Penguin dataset', fontsize=24)
 #     #plt.show()
-#     
+#
 #     labels = ['PC' + str(x) for x in range(1,N+1) ]
-#     
+#
 #     df = pd.DataFrame(taxons,columns = ['target'])
-#     
+#
 #     principalDf = pd.DataFrame(data = embedding[:, :], columns = labels)
-#     
+#
 #     finalDf = pd.concat([principalDf,df[['target']]], axis = 1)
-#        
-#     
-#     
-#     
-# 
-#     
-#     
-#     
+#
+#
+#
+#
+#
+#
+#
+#
 #     #######################CLUTSER
-#     
+#
 #     X = embedding[:, :]
-#     
+#
 #     #print(X)
 #     lowest_bic = np.infty
 #     bic = []
@@ -275,18 +269,18 @@ print(strTree)
 #             if bic[-1] < lowest_bic:
 #                 lowest_bic = bic[-1]
 #                 best_gmm = gmm
-#     
+#
 #     bic = np.array(bic)
 #     BPcolors = ['salmon','red','pink', 'orange',#'steelblue',#'cornflowerblue', 'turquoise', 'darkorange',
 #                 'olive','teal','purple','gold',
 #                 'cyan','tan','green',
 #                 'silver','maroon','lime',
 #                 'thistle','skyblue','plum','dodgerblue','chocolate']#,'green','grey']
-# 
+#
 #     color_iter = itertools.cycle(BPcolors)
 #     clf = best_gmm
 #     bars = []
-#     
+#
 #     # Plot the BIC scores
 #     plt.figure(figsize=(8, 8))
 #     spl = plt.subplot(2, 1, 1)
@@ -303,7 +297,7 @@ print(strTree)
 #     plt.text(xpos, bic.min() * 0.97 + .03 * bic.max(), '*', fontsize=14)
 #     spl.set_xlabel('Number of components')
 #     spl.legend([b[0] for b in bars], cv_types)
-#     
+#
 #     # Plot the winner
 #     splot = plt.subplot(2, 1, 2)
 #     Y_ = clf.predict(X)
@@ -314,7 +308,7 @@ print(strTree)
 #         if not np.any(Y_ == i):
 #             continue
 #         plt.scatter(X[Y_ == i, 0], X[Y_ == i, 1], .8, color=color)
-#     
+#
 #         # Plot an ellipse to show the Gaussian component
 #         #angle = np.arctan2(w[0][1], w[0][0])
 #         #angle = 180. * angle / np.pi  # convert to degrees
@@ -323,16 +317,16 @@ print(strTree)
 #         #ell.set_clip_box(splot.bbox)
 #         #ell.set_alpha(.45)
 #         #splot.add_artist(ell)
-#     
+#
 #     plt.xticks(())
 #     plt.yticks(())
 #     plt.title('Selected GMM: full model, '+ str(clf.n_components) +' components')
 #     plt.subplots_adjust(hspace=.35, bottom=.02)
 #     plt.savefig('../data/EMMplots/2021-01-25_'+str(n_H)+'_GMMsweep_'+FAM+'_'+metric+'.png')
 #     plt.show()
-#     
+#
 #     print(clf.n_components)
-#     
+#
 #     # =============================================================================
 #     # print(clf.predict(X))
 #     # print(taxons)
@@ -340,7 +334,7 @@ print(strTree)
 #     taxonsLabels = []
 #     repDict={}
 #     catTax = []
-#     
+#
 #     for i in range(clf.n_components):
 #         catTax.append([])#{0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]}
 #     for i in range(0,len(taxons)):
@@ -350,7 +344,7 @@ print(strTree)
 #         catTax[int(clf.predict(X)[i])].append(taxons[i]+"|"+str(clf.predict(X)[i]))
 #         #for tree label replacement
 #         repDict[taxons[i]] = taxons[i]+"|"+str(clf.predict(X)[i])
-#     
+#
 #     strTree = tree.as_string(schema="newick")
 #     # =============================================================================
 #     print(strTree)
@@ -358,17 +352,17 @@ print(strTree)
 #     strTree = re.sub('Inner[0-9][0-9][0-9]','', strTree)
 #     strTree = re.sub('Inner[0-9][0-9]','', strTree)
 #     strTree = re.sub('Inner[0-9]','', strTree)
-#     
+#
 #     for key in repDict.items():
 #         #print(key)
 #         strTree = strTree.replace(key[0],key[1])
-#         
+#
 #     # =============================================================================
 #     print(strTree)
 #     # =============================================================================
-#     
+#
 #     import re
-#     
+#
 #     #print(re.sub('\)\d:', '\).:',  strTree))
 #     finalStrTree = strTree
 #     for iter in re.finditer("\D(?<=:)",strTree):
@@ -382,29 +376,29 @@ print(strTree)
 #     EMtree_file = open(OUTTREE,'w+')
 #     n = EMtree_file.write(finalStrTree)
 #     EMtree_file.close()
-#     
-#     
-#     
-#     
-#     
+#
+#
+#
+#
+#
 #     from Bio.Phylo.PhyloXML import Phylogeny
-#     
+#
 #     BPtree = Phylo.read(OUTTREE, "newick")
 #     BPtree.ladderize()
 #     print(BPtree)
 #     print(catTax)
 #     #Phylo.draw_ascii(BPtree)
 #     #Phylo.draw(BPtree)
-#      
+#
 #     #make tree color-able
 #     BPtree.rooted = True
 #     BPtree = Phylogeny.from_tree(BPtree)
 #     #BPtree = BPtree.as_phyloxml()
-#     
+#
 #     #color tree
 #     BPtree.root.color = (128, 128, 128)
 #     Phylo.draw(BPtree)
-#     
+#
 #     #BPcolors = list(color_iter)#["blue",'salmon','red','yellow','black','orange','purple','green','brown']
 #     k=0
 #     for v in catTax:
@@ -419,9 +413,9 @@ print(strTree)
 #                 mrca.color = BPcolors[k%len(BPcolors)]
 #             except:
 #                 pass
-#         k+=1     
-#         
-#     
+#         k+=1
+#
+#
 #     with plt.rc_context({'lines.linewidth': 3}):
 #         matplotlib.rc('font', size=10)
 #         fig = plt.figure(figsize=(8,HEIGHT), dpi=200)
@@ -434,45 +428,45 @@ print(strTree)
 #         Phylo.draw(BPtree,axes=axes,do_show=False,branch_labels=None)
 #         plt.savefig("../data/"+FAM+"colored/2021-01-25_"+str(n_H)+"_EMClust_"+FAM+"_"+metric+"_coloredtree.png")
 #         plt.show()
-# 
+#
 #     #make target vector
 #     labs = []
 #     for ii in finalDf['target']:
-#         
+#
 #         labs.append(BPcolors[int(repDict[ii].split('|')[-1])%len(BPcolors)])#print(ii,repDict[ii].split('|')[-1])
 #     finalDf['labels'] = labs
 #     print(finalDf)
-#     
-# 
-# 
+#
+#
+#
 #     fig = plt.figure(figsize = (8,8))
-#     ax = fig.add_subplot(1,1,1) 
-#     
+#     ax = fig.add_subplot(1,1,1)
+#
 #     ax.set_xlabel('Component 1: ', fontsize = 15)#+str(round(pca.explained_variance_ratio_[0], 2))
 #     ax.set_ylabel('Component 2: ', fontsize = 15)#+str(round(pca.explained_variance_ratio_[1], 2))
 #     ax.set_title('2 Component UMAP', fontsize = 20)
-#     
+#
 #     targets = ['OMP', 'PMP', 'PAL']
 #     colors = [1,25,3]
 #     marks = ['o','v','*']
-# 
+#
 #     ax.legend(targets)
 #     ax.grid()
 #     plt.scatter(finalDf["PC1"],finalDf['PC2'],c=list(finalDf['labels']))
 #     plt.show()
-# 
+#
 # #############################################################
-# 
+#
 #     fig = plt.figure(figsize = (8,8))
 #     ax = fig.add_subplot(111, projection = '3d')
 #     ax.set_xlabel('Component 1: ', fontsize = 15)#+str(round(pca.explained_variance_ratio_[0], 2))
 #     ax.set_ylabel('Component 2: ', fontsize = 15)#+str(round(pca.explained_variance_ratio_[1], 2))
 #     ax.set_title('3 Components UMAP', fontsize = 20)
-#     
+#
 #     targets = ['OMP', 'PMP', 'PAL']
 #     colors = ['r', 'g', 'b']
 #     marks = ['o','v','*']
-#     
+#
 #     plt.scatter(finalDf['PC1']
 #                    , finalDf['PC2']
 #                    , finalDf['PC3']
@@ -480,16 +474,16 @@ print(strTree)
 #     ax.legend(targets)
 #     ax.grid()
 #     plt.show()
-#     
-# 
-# 
-# 
+#
+#
+#
+#
 #     eteColors = ["","","","","","",""]
-#     
+#
 #     eteTree = Tree(strTree[4:].replace("'",""))
 #     eteTree.convert_to_ultrametric()
 #     print(eteTree)
-#     
+#
 #     ts = TreeStyle()
 #     ts.show_leaf_name = True
 #     ts.mode = "c"
@@ -511,7 +505,7 @@ print(strTree)
 #         nst["hz_line_width"] = 8
 #         nst["bgcolor"] = color
 #         print(nst)
-#         
+#
 #         for k in key:
 #             leaf = eteTree.search_nodes(name=k)
 #             leafb = eteTree.search_nodes(name="'"+k+"'")
@@ -528,24 +522,24 @@ print(strTree)
 #                     #print(v)
 #                     node = eteTree.get_common_ancestor("'"+k+"'",v)
 #                     node.set_style(nst)
-#         
-#         
+#
+#
 #         cc += 1
-#         
-#         
-#         
-#     
+#
+#
+#
+#
 #     eteTree.show(tree_style=ts)
-# 
+#
 #     eteTree.render("../data/"+FAM+"colored/"+FAM+"_colored.png",w=183,units='mm', tree_style=ts,dpi=300)
 #     pritmn
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#
+#
+#
+#
+#
+#
+#
+#
+#
 # =============================================================================

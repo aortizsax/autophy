@@ -6,6 +6,7 @@ import sys
 import re
 from setuptools import setup, find_packages
 
+
 def _read(path_components, **kwargs):
     path = os.path.join(os.path.dirname(__file__), *path_components)
     if sys.version_info.major < 3:
@@ -15,6 +16,7 @@ def _read(path_components, **kwargs):
             s = src.read()
         return s
 
+
 def _read_requirements(path):
     return [
         line.strip()
@@ -22,15 +24,20 @@ def _read_requirements(path):
         if not line.startswith(('"', "#", "-", "git+"))
     ]
 
+
 project_init = _read(["src", "autophy", "__init__.py"])
-__version__ = re.match(r".*^__version__\s*=\s*['\"](.*?)['\"]\s*$.*", project_init, re.S | re.M).group(1)
-__project__ = re.match(r".*^__project__\s*=\s*['\"](.*?)['\"]\s*$.*", project_init, re.S | re.M).group(1)
+__version__ = re.match(
+    r".*^__version__\s*=\s*['\"](.*?)['\"]\s*$.*", project_init, re.S | re.M
+).group(1)
+__project__ = re.match(
+    r".*^__project__\s*=\s*['\"](.*?)['\"]\s*$.*", project_init, re.S | re.M
+).group(1)
 
 setup(
     name=__project__,
     version=__version__,
-    author="Jeet Sukumaran",
-    author_email="jeetsukumaran@gmail.com",
+    author="Adrian Ortiz-Velez",
+    author_email="aortizsax@gmail.com",
     packages=find_packages("src"),
     package_dir={"": "src"},
     entry_points={
@@ -61,9 +68,9 @@ setup(
             # "../../resources/*.json",
         ],
     },
-    test_suite = "tests",
+    test_suite="tests",
     # url="http://pypi.python.org/pypi/autophy",
-    url="https://github.com/jeetsukumaran/autophy",
+    url="https://github.com/aortizsax/autophy",
     license="LICENSE",
     description="A Project",
     long_description=_read(["README.md"]),
