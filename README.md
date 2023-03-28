@@ -91,6 +91,10 @@ To run:
 cd data
 autophy -a ../data/OMPaln/2021-06-11_OMPuniprot_muscle.fasta -t ../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree -id OMP -d uniprot
 ```
+Or for your data
+```{bash}
+autophy -a ALIGNMENTFILE.fasta -t TREE.tree -id ID -d DATASET 
+```
 
 First UMAP projection. Parameters used 
 
