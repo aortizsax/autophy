@@ -20,7 +20,7 @@
 ## THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ## ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 ## WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-## DISCLAIMED. IN NO EVENT SHALL JEET SUKUMARAN BE LIABLE FOR ANY DIRECT,
+## DISCLAIMED. IN NO EVENT SHALL ADRIAN ORTIZ-VELEZ BE LIABLE FOR ANY DIRECT,
 ## INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 ## BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 ## DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -50,64 +50,65 @@ def main():
         "--alignment",
         action="store",
         default="../data/OMPaln/2021-06-11_OMPuniprot_muscle.fasta",
-        help="Suffix for output files [default=%(default)s].",
+        help="Alignment file in fasta format [default=%(default)s].",
     )
     parser.add_argument(
         "-t",
         "--tree",
         action="store",
         default="../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree",
-        help="Suffix for output files [default=%(default)s].",
+        help="Phylogenetic tree in Nexus or Newick with the same labels as alignment file [default=%(default)s].",
     )
     parser.add_argument(
         "-id",
         "--treeid",
         action="store",
         default="OMP",
-        help="Suffix for output files [default=%(default)s].",
+        help="Protein family string indetifier [default=%(default)s].",
     )
     parser.add_argument(
         "-d",
         "--database",
         action="store",
-        default="OMP",
-        help="Suffix for output files [default=%(default)s].",
+        default="uniprot",
+        help="Database string indentifier [default=%(default)s].",
     )
     parser.add_argument(
         "-H",
         "--height",
         action="store",
         default="22",
-        help="Suffix for output files [default=%(default)s].",
+        help="Height of Biopython plot [default=%(default)s].",
     )
     parser.add_argument(
         "-o",
-        "--output-prefix",
+        "--output-suffix",
         action="store",
         default="umapgmmemm",
         help="Suffix for output files [default=%(default)s].",
     )
+    parser.add_argument(
+        "-D",
+        "--output-directory",
+        action="store",
+        default="output",
+        help="Suffix for output files [default=%(default)s].",
+    )
     args = parser.parse_args()
     print("Hello, world.")
-    print(dir(args))
+
 
     #    'alignment', 'database', 'height', 'output_prefix', 'tree', 'treeid'
 
     alignment = args.alignment
     database = args.database
     height = args.height
-    output_prefix = args.output_prefix
+    output_suffix = args.output_suffix
     treefile = args.tree
     treeid = args.treeid
+    out_dir = args.output_directory
 
-    cluster(alignment, database, height, output_prefix, treefile, treeid)
-    # ALNPATH = "../data/OMPaln/2021-06-11_OMPuniprot_muscle.fasta"
-    # TREEPATH = "../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree"
-    # OUTTREE = "../data/uniprottrees/uniprotOMP_muscle_cah_umapemm.tree"
-    # Naln=1230
-    # TREEID='OMP'#'uniprot'
-    # FAM = 'uniprot'#'OMP'
-    # HEIGHT = 22
+    cluster(alignment, database, height, output_suffix, treefile, treeid,out_dir)
 
 
 if __name__ == "__main__":
