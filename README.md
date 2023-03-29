@@ -67,23 +67,26 @@ autophy -h
 returns:
 ```{bash}
 usage: autophy [-h] [-a ALIGNMENT] [-t TREE] [-id TREEID] [-d DATABASE]
-               [-H HEIGHT] [-o OUTPUT_PREFIX]
+               [-H HEIGHT] [-o OUTPUT_SUFFIX] [-D OUTPUT_DIRECTORY]
 
 optional arguments:
   -h, --help            show this help message and exit
   -a ALIGNMENT, --alignment ALIGNMENT
-                        Suffix for output files [default=../data/OMPaln/2021-0
-                        6-11_OMPuniprot_muscle.fasta].
-  -t TREE, --tree TREE  Suffix for output files [default=../data/uniprotbeast/
-                        uniprotOMP_muscle_1647964589147_cah.tree].
+                        Alignment file in fasta format [default=../data/OMPaln
+                        /2021-06-11_OMPuniprot_muscle.fasta].
+  -t TREE, --tree TREE  Phylogenetic tree in Nexus or Newick with the same
+                        labels as alignment file [default=../data/uniprotbeast
+                        /uniprotOMP_muscle_1647964589147_cah.tree].
   -id TREEID, --treeid TREEID
-                        Suffix for output files [default=OMP].
+                        Protein family string indetifier [default=OMP].
   -d DATABASE, --database DATABASE
-                        Suffix for output files [default=uniprot].
+                        Database string indentifier [default=uniprot].
   -H HEIGHT, --height HEIGHT
-                        Suffix for output files [default=22].
-  -o OUTPUT_PREFIX, --output-prefix OUTPUT_PREFIX
+                        Height of Biopython plot [default=22].
+  -o OUTPUT_SUFFIX, --output-suffix OUTPUT_SUFFIX
                         Suffix for output files [default=umapgmmemm].
+  -D OUTPUT_DIRECTORY, --output-directory OUTPUT_DIRECTORY
+                        Suffix for output files [default=output].
 ```
 
 To run:
