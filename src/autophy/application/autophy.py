@@ -97,7 +97,6 @@ def main():
     args = parser.parse_args()
     print("Hello, world.")
 
-
     #    'alignment', 'database', 'height', 'output_prefix', 'tree', 'treeid'
 
     alignment = args.alignment
@@ -108,7 +107,7 @@ def main():
     treeid = args.treeid
     out_dir = args.output_directory
 
-    cluster(alignment, database, height, output_suffix, treefile, treeid,out_dir)
+    cluster(alignment, database, height, output_suffix, treefile, treeid, out_dir)
 
 
 if __name__ == "__main__":

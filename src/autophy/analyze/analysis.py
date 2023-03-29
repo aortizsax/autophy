@@ -97,11 +97,9 @@ from sklearn.linear_model import LogisticRegression
 import os
 
 
-def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir):
-
-    
+def cluster(alignment, database, height, output_prefix, treefile, treeid, out_dir):
     if not os.path.exists(out_dir):
-       os.makedirs(out_dir)
+        os.makedirs(out_dir)
 
     today = date.today()
     # dd/mm/YY
@@ -109,7 +107,10 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
     DATE = d1
     ALNPATH = alignment
     TREEPATH = treefile
-    OUTTREE = "./"+out_dir+"/"+DATE+"_""tree" + treeid + database + output_prefix + ".tree"
+    OUTTREE = (
+        "./" + out_dir + "/" + DATE + "_"
+        "tree" + treeid + database + output_prefix + ".tree"
+    )
     TREEID = treeid
     FAM = database
     HEIGHT = 25  # height
@@ -247,7 +248,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
     n_Hs = [10]  # int(len(taxons)*3/4),
 
     for n_H in n_Hs:
-    #UMAP
+        # UMAP
         reducer = umap.UMAP(
             n_components=N,
             min_dist=0.0,
@@ -271,8 +272,10 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
         plt.title("UMAP projection of the phylogenetic dataset")
         plt.savefig(
             "./"
-            +out_dir
-            +"/"+DATE+"_"
+            + out_dir
+            + "/"
+            + DATE
+            + "_"
             + str(n_H)
             + "_ogUMAPprog"
             + FAM
@@ -397,10 +400,10 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
 
         ##############################################################
         taxonsLabels = []
-        
+
         # for tree label replacement
         repDict = {}
-        
+
         # for coloring tree
         catTax = []
 
@@ -408,11 +411,8 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
 
         clfpredictX = clf.predict(X)
 
-
-
         a_set = set(clfpredictX)
         number_of_unique_values = len(a_set)
-
 
         for i in range(number_of_unique_values):
             catTax.append([])
@@ -493,7 +493,6 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
             "--- %s START to Check monophylo seconds ---" % (time.time() - start_time)
         )
 
-
         tree = dendropy.Tree.get(
             path=OUTTREE,
             schema="newick",
@@ -563,7 +562,6 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
                     mp = check
 
                     if check is True:
-
                         partition = temppartition
                     elif maxres < 1:
                         for x in f:
@@ -591,7 +589,6 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
                                 (f.pop(f.index(x)), subclust)
                                 y_mp[ogindex] = subclust
                             subclust = subclust + 1
-
 
             secondpass = {}
             maxcluster = 0
@@ -851,8 +848,8 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
         sec_n = n_comp
         n_list = []
         count = 0
-        for (k) in (  catTax    ):  
-        # ['sp|A6ZRW3|TOM70.YEAS7|7', 'sp|B0B815|OMCB.CHLT2|7', 'sp|P07213|TOM70.YEAST|7', 'sp|P0A3U8|BP26.BRUME|7', 'sp|P0A3U9|BP26.BRUSU|7', 'sp|P0CC04|OMCBD.CHLTR|7', 'sp|P0DJI2|OMCB.CHLTH|7', 'sp|P23603|OMCBE.CHLTH|7', 'sp|P23700|OMCB.CHLPN|7', 'sp|P26758|OMCBC.CHLTH|7', 'sp|P94664|OMCB.CHLCV|7', 'sp|Q253E5|OMCB.CHLFF|7']
+        for k in catTax:
+            # ['sp|A6ZRW3|TOM70.YEAS7|7', 'sp|B0B815|OMCB.CHLT2|7', 'sp|P07213|TOM70.YEAST|7', 'sp|P0A3U8|BP26.BRUME|7', 'sp|P0A3U9|BP26.BRUSU|7', 'sp|P0CC04|OMCBD.CHLTR|7', 'sp|P0DJI2|OMCB.CHLTH|7', 'sp|P23603|OMCBE.CHLTH|7', 'sp|P23700|OMCB.CHLPN|7', 'sp|P26758|OMCBC.CHLTH|7', 'sp|P94664|OMCB.CHLCV|7', 'sp|Q253E5|OMCB.CHLFF|7']
 
             n = k[0].split("|")[-1]  # .split('|')[-1]
             n_list.append(n)
@@ -894,7 +891,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
 
         for k, v in reptax.items():
             finalStrTree.replace(k, v)
-        #print(finalStrTree)
+        # print(finalStrTree)
 
         #########   WRITE TREE
         EMtree_file = open(OUTTREE, "w+")
@@ -918,7 +915,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
                         dictpred[key] = []
                         dictpred[key].append("|".join(val.split("|")[:-1]))
 
-        #print((dictpred))
+        # print((dictpred))
         times["str_replace"] = time.time() - start_time
         print(
             "--- %s START to string change pass seconds ---"
@@ -1040,8 +1037,10 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
         plt.subplots_adjust(hspace=0.35, bottom=0.02)
         plt.savefig(
             "./"
-            +out_dir
-            +"/"+DATE+"_"
+            + out_dir
+            + "/"
+            + DATE
+            + "_"
             + str(n_H)
             + "_GMMsweep_"
             + FAM
@@ -1054,9 +1053,8 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
         )
         plt.show()
 
-        OUTF = ("./"+out_dir+"/"+DATE+"_" + FAM + TREEID + "_colored_RF.csv"
-        )
-        #print(OUTF)
+        OUTF = "./" + out_dir + "/" + DATE + "_" + FAM + TREEID + "_colored_RF.csv"
+        # print(OUTF)
         import csv
 
         with open(OUTF, "w") as f:
@@ -1077,7 +1075,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
                     ):  # if tree viewer loads labels incorrectly
                         pass  # val = val.replace('.','_')
 
-                   # print([val, k, BPcolors[i % len(BPcolors)], k1, treeViewColor[k1]])
+                    # print([val, k, BPcolors[i % len(BPcolors)], k1, treeViewColor[k1]])
                     writer.writerow(
                         [val, k, BPcolors[i % len(BPcolors)], k1, treeViewColor[k1]]
                     )
@@ -1086,7 +1084,9 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
         OUTF = (
             "../data/"
             + FAM
-            + "colored/"+DATE+"_"
+            + "colored/"
+            + DATE
+            + "_"
             + FAM
             + TREEID
             + "_coloredPASSONE.csv"
@@ -1103,7 +1103,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
                     writer.writerow([val, k1, treeViewColor[k1]])
                 i += 1
 
-        #print(OUTF)
+        # print(OUTF)
         times["file_save"] = time.time() - start_time
 
         print("--- %s START to file save seconds ---" % (time.time() - start_time))
@@ -1155,7 +1155,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
                     pass
             k += 1
 
-        #print(v, k)
+        # print(v, k)
 
         with plt.rc_context({"lines.linewidth": 4}):
             matplotlib.rc("font", size=0.0)
@@ -1171,8 +1171,10 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
             Phylo.draw(reclustBPtree, axes=axes, do_show=False, branch_labels=None)
             plt.savefig(
                 "./"
-                +out_dir
-                +"/"+DATE+"_"
+                + out_dir
+                + "/"
+                + DATE
+                + "_"
                 + str(n_H)
                 + "_EMClust_"
                 + FAM
@@ -1184,6 +1186,7 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid,out_dir
                 dpi=600,
             )
             plt.show()
+
 
 ##    import math
 ##
