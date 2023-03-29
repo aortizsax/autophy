@@ -98,16 +98,16 @@ autophy -a ALIGNMENTFILE.fasta -t TREE.tree -id ID -d DATASET
 
 First UMAP projection. Parameters used 
 
-![](./data/EMMplots/2023-03-07_10_ogUMAPprogOMPOMP_precomputed.svg)
+![](./data/output/2023-03-28_10_ogUMAPproguniprotOMP_precomputed.svg)
 
 Second, we fit Gaussian Mixture Model(GMM) using Expectation Maximization(EM) to the UMAP projection. GMM fits Gaussian peaks to any dimension. We score GMM models of increasing peak number using BIC score and pick the model with the lowest BIC score.
 
-![](./data/EMMplots/2023-03-07_10_GMMsweep_OMPOMP_precomputed.svg)
+![](./data/output/2023-03-28_10_GMMsweep_uniprotOMP_precomputed.svg)
 
 
 Third, in the case that when GMM peaks in the model pertain to paraphyletic clusters, we slpit those GMM peaks into simple monoplytic clusters and add a decimal at the end of the label so the user knows which GMM peak they originated from. Finally, the program prints the final clustered and colored tree 
 
-![](./data/OMPcolored/2023-03-07_10_EMClust_OMPOMP_precomputed_coloredtree.svg)
+![](./data/output/2023-03-28_10_EMClust_uniprotOMP_precomputed_coloredtree.svg)
 
 
 ## License and Warranty
