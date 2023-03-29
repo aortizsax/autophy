@@ -1081,10 +1081,9 @@ def cluster(alignment, database, height, output_prefix, treefile, treeid, out_di
                     )
                 i += 1
 
-        OUTF = (
-            "../data/"
-            + FAM
-            + "colored/"
+        OUTF = ("./"
+            +out_dir
+            +"/"
             + DATE
             + "_"
             + FAM
