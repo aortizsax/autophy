@@ -45,13 +45,7 @@ def main():
     #         nargs="+",
     #        metavar="FILE",
     #       help="Path to source file(s).")
-    parser.add_argument(
-        "-a",
-        "--alignment",
-        action="store",
-        default="../data/OMPaln/2021-06-11_OMPuniprot_muscle.fasta",
-        help="Alignment file in fasta format [default=%(default)s].",
-    )
+
     parser.add_argument(
         "-t",
         "--tree",
@@ -97,9 +91,6 @@ def main():
     args = parser.parse_args()
     print("Hello, world.")
 
-    #    'alignment', 'database', 'height', 'output_prefix', 'tree', 'treeid'
-
-    alignment = args.alignment
     database = args.database
     height = args.height
     output_suffix = args.output_suffix
@@ -107,7 +98,7 @@ def main():
     treeid = args.treeid
     out_dir = args.output_directory
 
-    cluster(alignment, database, height, output_suffix, treefile, treeid, out_dir)
+    cluster(database, height, output_suffix, treefile, treeid, out_dir)
 
 
 if __name__ == "__main__":
