@@ -46,7 +46,6 @@ def main():
     #        metavar="FILE",
     #       help="Path to source file(s).")
 
-
     parser.add_argument(
         "-t",
         "--tree",
