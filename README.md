@@ -20,11 +20,6 @@ Change directory in to cloned repo:
 cd autophy
 ```
 
-In the future, you can update AutoPhy by running the following commands after changing directory into repo folder. To update the repo run this:
-```bash
-git fetch
-```
-
 Create the conda enviroment:
 
 ```bash
@@ -48,6 +43,8 @@ Check build
 ```bash
 autophy -h
 ```
+
+In the future, you can update AutoPhy deleting the directory and rerunning this instalation. 
 
 ## Documentation
 
