@@ -53,6 +53,7 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
     import umap
     import pprint
     import time
+    import re
     
     
     if not os.path.exists(out_dir):
