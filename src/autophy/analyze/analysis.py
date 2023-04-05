@@ -30,74 +30,31 @@
 ##
 ##############################################################################
 
-from matplotlib.ticker import StrMethodFormatter
-
-
-import numpy as np
-import itertools
-import re
-
-from scipy import linalg
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-
-from sklearn import mixture
-
-import sys
-import dendropy
-
-import numpy as np
-import scipy.spatial.distance as ssd
-from sklearn.decomposition import PCA
-from sklearn import preprocessing
-import pandas as pd
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn import mixture
-import itertools
-from scipy import linalg
-import matplotlib as mpl
-from Bio import Phylo
-import matplotlib
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-import umap
-import pprint
-import time
-
-
-from datetime import date
-import datetime
-
-from scipy.cluster.hierarchy import dendrogram, linkage
-from matplotlib import pyplot as plt
-import scipy.cluster.hierarchy as shc
-
-import dendropy
-
-import statistics
-
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import time
-from collections import OrderedDict
-
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
-from sklearn import metrics
-
-from prettytable import PrettyTable
-
-from datetime import date
-
-from sklearn.linear_model import LogisticRegression
-import os
-
-
 def cluster(database, height, output_prefix, treefile, treeid, out_dir):
+
+    from datetime import date
+    import statistics
+    import time
+    import dendropy
+    import numpy as np
+    import itertools
+    import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    import os
+    import pandas as pd
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn import mixture
+    import scipy.spatial.distance as ssd
+    #import re
+    import itertools
+    import matplotlib as mpl
+    from Bio import Phylo
+    import matplotlib
+    import umap
+    import pprint
+    import time
+    
+    
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
