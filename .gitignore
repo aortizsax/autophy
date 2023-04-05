@@ -7,3 +7,5 @@ setup.cfg
 setuptools-*.egg
 .DS_Store
 data/*
+output/*
+bsh_output/*
