@@ -9,18 +9,9 @@ The primary home page for
 
 AutoPhy runs under Python 3 ( > 3.7, <=3.9)
 
-You can install AutoPhy by running the following commands. To clone the repo:
-```bash
-git clone https://github.com/aortizsax/autophy.git
-```
+You can install AutoPhy by running the following commands. 
 
-Change directory in to cloned repo:
-
-```bash
-cd autophy
-```
-
-Create the conda enviroment:
+First, create the conda enviroment:
 
 ```bash
 conda create -n autophy python==3.8
@@ -32,12 +23,10 @@ Activate conda enviroment:
 conda activate autophy
 ```
 
-Install repo as python package:
-
+Install package direct from github
 ```bash
-pip install .
+pip install 'autophy @ git+https://github.com/aortizsax/autophy@main'
 ```
-
 Check build
 
 ```bash
