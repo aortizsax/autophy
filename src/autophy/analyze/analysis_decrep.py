@@ -94,118 +94,43 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
         "#abd9e9",
     ]
 
-    BPcolors = [
-        "#999999",
-        "#E69F00",
-        "#56B4E9",
-        "#009E73",
-        "#F0E442",
-        "#0072B2",
-        "#D55E00",
-        "#CC79A7",
-        "#f46d43",
-        "#abd9e9",
-        "#8B8378",
-        "#00FFFF",
-        "#7FFFD4",
-        "#458B74",
-        "#838B8B",
-        "#E3CF57",
-        "#8B7D6B",
-        "#EED5B7",
-        "#8A2BE2",
-        
-    ]
-    
-    
-    
-    BPcolors = ["#2f4f4f",
-                "#556b2f",
-                "#8b4513",
-                "#2e8b57",
-                "#228b22",
-                "#708090",
-                "#8b0000",
-                "#808000",
-                "#483d8b",
-                "#008080",
-                "#b8860b",
-                "#4682b4",
-                "#d2691e",
-                "#9acd32",
-                "#32cd32",
-                "#8fbc8f",
-                "#800080",
-                "#b03060",
-                "#9932cc",
-                "#ff4500",
-                "#00ced1",
-                "#ff8c00",
-                "#ffd700",
-                "#0000cd",
-                "#deb887",
-                "#00ff00",
-                "#00fa9a",
-                "#dc143c",
-                "#00bfff",
-                "#f4a460",
-                "#0000ff",
-                "#a020f0",
-                "#adff2f",
-                "#ff6347",
-                "#da70d6",
-                "#b0c4de",
-                "#ff00ff",
-                "#f0e68c",
-                "#fa8072",
-                "#ffff54",
-                "#6495ed",
-                "#dda0dd",
-                "#90ee90",
-                "#7b68ee",
-                "#afeeee",
-                "#7fffd4",
-                "#ff69b4",
-                "#ffb6c1",
+    if (
+        (FAM == "OMP")
+        | (FAM == "nextstrain")
+        | (FAM == "pfam")
+        | (FAM == "control")
+        | (FAM == "viral")
+    ):
+        BPcolors = [
+            "#e6194B",
+            "#3cb44b",
+            "#ffe119",
+            "#4363d8",
+            "#f58231",
+            "#ba3fdf",
+            "#42d4f4",
+            "#bfef45",
+            "#fabed4",
+            "#469990",
+            "#dcbeff",
+            "#9A6324",
+            "#b3a400",
+            "#800000",
+            "#82baff",
+            "#808000",
+            "#ffd8b1",
+            "#0072B2",
+            "#999999",
+            "#E69F00",
+            "#56B4E9",
+            "#009E73",
+            "#F0E442",
+            "#0072B2",
+            "#D55E00",
+            "#CC79A7",
+            "#f46d43",
+            "#abd9e9",
         ]
-
-    # if (
-        # (FAM == "OMP")
-        # | (FAM == "nextstrain")
-        # | (FAM == "pfam")
-        # | (FAM == "control")
-        # | (FAM == "viral")
-    # ):
-        # BPcolors = [
-            # "#e6194B",
-            # "#3cb44b",
-            # "#ffe119",
-            # "#4363d8",
-            # "#f58231",
-            # "#ba3fdf",
-            # "#42d4f4",
-            # "#bfef45",
-            # "#fabed4",
-            # "#469990",
-            # "#dcbeff",
-            # "#9A6324",
-            # "#b3a400",
-            # "#800000",
-            # "#82baff",
-            # "#808000",
-            # "#ffd8b1",
-            # "#0072B2",
-            # "#999999",
-            # "#E69F00",
-            # "#56B4E9",
-            # "#009E73",
-            # "#F0E442",
-            # "#0072B2",
-            # "#D55E00",
-            # "#CC79A7",
-            # "#f46d43",
-            # "#abd9e9",
-        # ]
 
     if (TREEPATH[-4:] == ".nhx") | (TREEPATH[-4:] == ".nwk"):
         tree = dendropy.Tree.get(
@@ -236,15 +161,15 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
             rooting="default-rooted",
             edge_length_type=float,
             case_sensitive_taxon_labels=False,
-            terminating_semicolon_required=True, 
+            terminating_semicolon_required=True,
         )
 
     tree.ladderize()
-    pdm = tree.phylogenetic_distance_matrix() 
+    pdm = tree.phylogenetic_distance_matrix()
 
     start_time = time.time()
 
-    pdmA = np.zeros((len(tree.taxon_namespace), len(tree.taxon_namespace))) 
+    pdmA = np.zeros((len(tree.taxon_namespace), len(tree.taxon_namespace)))
     counter = 0
     i = 0
     taxons = []
@@ -269,7 +194,8 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
     print("--- %s seconds to parse tree and PDM ---" % (time.time() - start_time))
 
     # dimensions of reduciton
-    N = 2
+    N = 4
+    N = 4
     if FAM == "PRACT":
         N = 5
 
@@ -277,10 +203,7 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
 
     # n neighbors like tsneq
     n_Hs = [15]  # int(len(taxons)*3/4),
-    n_Hs = [int(len(taxons)*0.33)]  # int(len(taxons)*3/4),
-    n_Hs = [40]  # int(len(taxons)*3/4),
-    n_Hs = [5,7,9,11,13,15,17,19,21]  # int(len(taxons)*3/4),
-    n_Hs = [3]  # int(len(taxons)*3/4),
+    n_Hs = [10]  # int(len(taxons)*3/4),
 
     for n_H in n_Hs:
         # UMAP
@@ -335,28 +258,23 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
         lowest_bic = np.infty
         bic = []
         n_components_range = range(1, 40)
-        
         if FAM == "control":
             n_components_range = range(1, 50)
         if FAM == "pfam":
             n_components_range = range(1, 30)
         if FAM == "OMP":
-            start = 1
+            start = 3
             n_components_range = range(start, 25)
         if FAM == "uniprot":
             start = 1
-            n_components_range = range(start, 50)
+            n_components_range = range(start, 20)
         if (FAM == "viral") | (FAM == "nextstrain") | (FAM == "viral"):
-            start = 1
+            start = 8
             n_components_range = range(start, 50)
         if FAM == "PRACT":
             n_components_range = range(1, 6)
         cv_types = ["full"]  # ,'tied']
-        
-        if len(taxons) <= (len(n_components_range) - 1):
-            n_components_range = range(1, (len(n_components_range) - 1))
-        
-        
+
         for cv_type in cv_types:
             for n_components in n_components_range:
                 # Fit a Gaussian mixture with EM
@@ -1221,556 +1139,533 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
 #            plt.show()
 
 
-#    import math
+##    import math
 ##
-    if (TREEPATH[-4:] == ".nhx") | (TREEPATH[-4:] == ".nwk"):
-        tree = dendropy.Tree.get(
-            path=TREEPATH,
-            schema="newick",
-            label=None,
-            taxon_namespace=None,
-            collection_offset=None,
-            tree_offset=None,
-            rooting="default-rooted",
-            edge_length_type=float,
-            suppress_edge_lengths=False,
-            extract_comment_metadata=True,
-            store_tree_weights=False,
-            finish_node_fn=None,
-            case_sensitive_taxon_labels=False,
-            preserve_underscores=False,
-            suppress_internal_node_taxa=True,
-            suppress_leaf_node_taxa=False,
-            terminating_semicolon_required=True,
-            ignore_unrecognized_keyword_arguments=False,
-        )
+#    if (TREEPATH[-4:] == ".nhx") | (TREEPATH[-4:] == ".nwk"):
+#        tree = dendropy.Tree.get(
+#            path=TREEPATH,
+#            schema="newick",
+#            label=None,
+#            taxon_namespace=None,
+#            collection_offset=None,
+#            tree_offset=None,
+#            rooting="default-rooted",
+#            edge_length_type=float,
+#            suppress_edge_lengths=False,
+#            extract_comment_metadata=True,
+#            store_tree_weights=False,
+#            finish_node_fn=None,
+#            case_sensitive_taxon_labels=False,
+#            preserve_underscores=False,
+#            suppress_internal_node_taxa=True,
+#            suppress_leaf_node_taxa=False,
+#            terminating_semicolon_required=True,
+#            ignore_unrecognized_keyword_arguments=False,
+#        )
 
-    else:
-        tree = dendropy.Tree.get(
-            path=TREEPATH,
-            schema="nexus",
-            rooting="default-rooted",
-            edge_length_type=float,
-            terminating_semicolon_required=True,
-        )
+#    else:
+#        tree = dendropy.Tree.get(
+#            path=TREEPATH,
+#            schema="nexus",
+#            rooting="default-rooted",
+#            edge_length_type=float,
+#            terminating_semicolon_required=True,
+#        )
 
-    tree.ladderize()
-    Y_table = pd.read_csv(OUTF,
-        dtype="string",
-    )
+#    tree.ladderize()
+#    Y_table = pd.read_csv(
+#        "../data/" + FAM + "colored/2023-03-07" + FAM + TREEID + "_colored_RF.csv",
+#        dtype="string",
+#    )
 
-    clusters = Y_table[["Label", "Cluster"]]
+#    clusters = Y_table[["Label", "Cluster"]]
 
-    tree.ladderize()
+#    tree.ladderize()
 
-    pdm = tree.phylogenetic_distance_matrix()
+#    pdm = tree.phylogenetic_distance_matrix()
 
-    start_time = time.time()
+#    start_time = time.time()
 
-    print(clusters)
+#    print(clusters)
 
-    # function to get unique values
-    def unique(list1):
-        # initialize a null list
-        unique_list = []
+#    # function to get unique values
+#    def unique(list1):
+#        # initialize a null list
+#        unique_list = []
 
-        # traverse for all elements
-        for x in list1:
-            # check if exists in unique_list or not
-            if x not in unique_list:
-                unique_list.append(x)
-        # print list
-        return unique_list  # for x in unique_list:
+#        # traverse for all elements
+#        for x in list1:
+#            # check if exists in unique_list or not
+#            if x not in unique_list:
+#                unique_list.append(x)
+#        # print list
+#        return unique_list  # for x in unique_list:
 
-    # dicts for dataframe
-    uniqueclust = unique(clusters["Cluster"])
-    FDdict = {}
-    parFDdict = {}
-    meanPDdict = {}
-    sizedict = {}
+#    # dicts for dataframe
+#    uniqueclust = unique(clusters["Cluster"])
+#    FDdict = {}
+#    parFDdict = {}
+#    meanPDdict = {}
+#    sizedict = {}
 
-    sdevPDdict = {}
-    meammDdict = {}
-    clustdict = {}
-    mrcadict = {}
-    stdistPDdict = {}
+#    sdevPDdict = {}
+#    meammDdict = {}
+#    clustdict = {}
+#    mrcadict = {}
+#    stdistPDdict = {}
 
-    pdm = tree.phylogenetic_distance_matrix()
-    print("Sum of PD", pdm.sum_of_distances())
-    totfpd = pdm.sum_of_distances()
+#    pdm = tree.phylogenetic_distance_matrix()
+#    print("Sum of PD", pdm.sum_of_distances())
+#    totfpd = pdm.sum_of_distances()
 
-    print("MPD", pdm.mean_pairwise_distance())
-    totmpd = pdm.mean_pairwise_distance()
+#    print("MPD", pdm.mean_pairwise_distance())
+#    totmpd = pdm.mean_pairwise_distance()
 
-    totphg = dendropy.calculate.treemeasure.treeness(tree)
-    print("PHgamma", totphg)
+#    totphg = dendropy.calculate.treemeasure.treeness(tree)
+#    print("PHgamma", totphg)
 
-    totsdevPD = np.std(pdmA)
-    print("TotSTD", totsdevPD)
+#    totsdevPD = np.std(pdmA)
+#    print("TotSTD", totsdevPD)
 
-    for mm in uniqueclust:
-        isclust = clusters["Cluster"] == mm
-        clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
-        clustlist = []
-        for ii in clusttaxon:
-            clustlist.append(str(ii[0]))
-        clustdict[str(mm)] = clustlist
-        nd = tree.mrca(taxon_labels=clustlist)
-        print(mm, len(clustlist))
-        mrcadict[str(mm)] = nd
+#    for mm in uniqueclust:
+#        isclust = clusters["Cluster"] == mm
+#        clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
+#        clustlist = []
+#        for ii in clusttaxon:
+#            clustlist.append(str(ii[0]))
+#        clustdict[str(mm)] = clustlist
+#        nd = tree.mrca(taxon_labels=clustlist)
+#        print(mm, len(clustlist))
+#        mrcadict[str(mm)] = nd
 
-    parclustmetric = {}
+#    parclustmetric = {}
 
-    for mrca in mrcadict.items():
-        print(mrca[0], mrca[1])
-        clustlist = []
-        for id in mrca[1].parent_node.leaf_nodes():
-            print(id.__str__().split(" ")[-1][1:-4])
-            clustlist.append(str(id.__str__().split(" ")[-1][1:-4]))
-        treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
-        pdmclust = treeclust.phylogenetic_distance_matrix()
-        clustmpd = pdmclust.mean_pairwise_distance()
+#    for mrca in mrcadict.items():
+#        print(mrca[0], mrca[1])
+#        clustlist = []
+#        for id in mrca[1].parent_node.leaf_nodes():
+#            print(id.__str__().split(" ")[-1][1:-4])
+#            clustlist.append(str(id.__str__().split(" ")[-1][1:-4]))
+#        treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
+#        pdmclust = treeclust.phylogenetic_distance_matrix()
+#        clustmpd = pdmclust.mean_pairwise_distance()
 
-        print(pdmclust)
-        mm = mrca[0]
-        parclustmetric[str(mm)] = clustmpd
+#        print(pdmclust)
+#        mm = mrca[0]
+#        parclustmetric[str(mm)] = clustmpd
 
-        # parent node
-        # split table for leaves
-        # extract tree for leaves
-        # et MPD for that group
-    print(dir(mrca[1]))
+#        # parent node
+#        # split table for leaves
+#        # extract tree for leaves
+#        # et MPD for that group
+#    print(dir(mrca[1]))
 
-    for mm in uniqueclust:
-        isclust = clusters["Cluster"] == mm
-        clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
-        clustlist = []
-        for ii in clusttaxon:
-            clustlist.append(str(ii[0]))
+#    for mm in uniqueclust:
+#        isclust = clusters["Cluster"] == mm
+#        clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
+#        clustlist = []
+#        for ii in clusttaxon:
+#            clustlist.append(str(ii[0]))
 
-        if len(clusttaxon) > 1:
-            # extract subfamily
-            treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
-            pdmclust = treeclust.phylogenetic_distance_matrix()
+#        if len(clusttaxon) > 1:
+#            # extract subfamily
+#            treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
+#            pdmclust = treeclust.phylogenetic_distance_matrix()
 
-            mrca_cluster = tree.mrca(taxon_labels=clustlist)
-            subtending_cluster_edge = mrca_cluster.edge_length
+#            mrca_cluster = tree.mrca(taxon_labels=clustlist)
+#            subtending_cluster_edge = mrca_cluster.edge_length
 
-            pdmdatatable = pdmclust.as_data_table()._data
-            pdmA = np.zeros(
-                (len(treeclust.taxon_namespace), len(treeclust.taxon_namespace))
-            )
-            counter = 0
-            i = 0
-            for taxon in clustlist:
-                j = 0
-                for taxon2 in clustlist:
-                    # print(pdmdatatable[taxon][taxon2])
-                    if j > i:  # j>i:
-                        pdmA[i, j] = float(pdmdatatable[taxon][taxon2])
-                        pdmA[j, i] = float(pdmdatatable[taxon][taxon2])
-                    j += 1
-                i += 1
+#            pdmdatatable = pdmclust.as_data_table()._data
+#            pdmA = np.zeros(
+#                (len(treeclust.taxon_namespace), len(treeclust.taxon_namespace))
+#            )
+#            counter = 0
+#            i = 0
+#            for taxon in clustlist:
+#                j = 0
+#                for taxon2 in clustlist:
+#                    # print(pdmdatatable[taxon][taxon2])
+#                    if j > i:  # j>i:
+#                        pdmA[i, j] = float(pdmdatatable[taxon][taxon2])
+#                        pdmA[j, i] = float(pdmdatatable[taxon][taxon2])
+#                    j += 1
+#                i += 1
 
-            c = 0.1
-            c2 = 0.0
-            func = np.absolute
+#            c = 0.1
+#            c2 = 0.0
+#            func = np.absolute
 
-            size = len(clustlist)
-            sizedict[str(mm)] = size
-            clustmpd = pdmclust.mean_pairwise_distance()
+#            size = len(clustlist)
+#            sizedict[str(mm)] = size
+#            clustmpd = pdmclust.mean_pairwise_distance()
 
-            ###change the totmpd  to subtending branch
+#            ###change the totmpd  to subtending branch
 
-            print(
-                "Cluster:",
-                mm,
-                "; Tree Metric Log odds MPD",
-                np.log10(clustmpd / totmpd),
-            )
+#            print(
+#                "Cluster:",
+#                mm,
+#                "; Tree Metric Log odds MPD",
+#                np.log10(clustmpd / totmpd),
+#            )
 
-            print(
-                "Cluster:",
-                mm,
-                "; Parent clade Metric Log odds MPD",
-                np.log10(clustmpd / parclustmetric[mm]),
-            )
+#            print(
+#                "Cluster:",
+#                mm,
+#                "; Parent clade Metric Log odds MPD",
+#                np.log10(clustmpd / parclustmetric[mm]),
+#            )
 
-            meanpairwisedist = pdmclust.mean_pairwise_distance()
-            meanPDdict[str(mm)] = np.log10(clustmpd / subtending_cluster_edge)
-            FDdict[str(mm)] = func(pdmclust.sum_of_distances())
-            parFDdict[str(mm)] = np.log10(clustmpd / parclustmetric[mm])
-            sdevPDdict[str(mm)] = np.log10(func(np.std(pdmA)) / totsdevPD)
+#            meanpairwisedist = pdmclust.mean_pairwise_distance()
+#            meanPDdict[str(mm)] = np.log10(clustmpd / subtending_cluster_edge)
+#            FDdict[str(mm)] = func(pdmclust.sum_of_distances())
+#            parFDdict[str(mm)] = np.log10(clustmpd / parclustmetric[mm])
+#            sdevPDdict[str(mm)] = np.log10(func(np.std(pdmA)) / totsdevPD)
 
-            clustphg = dendropy.calculate.treemeasure.treeness(treeclust)
-            # print("Cluster:",mm,"; Metric Log odds treeness",np.log10(clustphg/totphg))
+#            clustphg = dendropy.calculate.treemeasure.treeness(treeclust)
+#            # print("Cluster:",mm,"; Metric Log odds treeness",np.log10(clustphg/totphg))
 
-            meammDdict[str(mm)] = func(pdmclust.mean_nearest_taxon_distance())
-            stdistPDdict[str(mm)] = func(clustphg)
+#            meammDdict[str(mm)] = func(pdmclust.mean_nearest_taxon_distance())
+#            stdistPDdict[str(mm)] = func(clustphg)
 
-    colordict = {}
-    for k in Y_table.iloc:
-        clust = k["Cluster"]
-        col = k["Color"]
+#    colordict = {}
+#    for k in Y_table.iloc:
+#        clust = k["Cluster"]
+#        col = k["Color"]
 
-        colordict[clust] = col
+#        colordict[clust] = col
 
-    rankD = pd.DataFrame(columns=["Clust", "MeanPD", "NearPD", "sdev"], dtype=object)
-    rankD["Clust"] = list(meanPDdict.keys())
-    rankD["MeanPD"] = list(meanPDdict.values())
-    rankD["ParMeanPD"] = list(parFDdict.values())
-    rankD["NearPD"] = list(meammDdict.values())
-    rankD["SPD"] = list(FDdict.values())
-    rankD["sdev"] = list(sdevPDdict.values())
-    rankD["size"] = list(sizedict.values())
+#    rankD = pd.DataFrame(columns=["Clust", "MeanPD", "NearPD", "sdev"], dtype=object)
+#    rankD["Clust"] = list(meanPDdict.keys())
+#    rankD["MeanPD"] = list(meanPDdict.values())
+#    rankD["ParMeanPD"] = list(parFDdict.values())
+#    rankD["NearPD"] = list(meammDdict.values())
+#    rankD["SPD"] = list(FDdict.values())
+#    rankD["sdev"] = list(sdevPDdict.values())
+#    rankD["size"] = list(sizedict.values())
 
-    # creating a rank column and passing the returned rank series
-    rankD["ClustRank"] = rankD["Clust"].rank()
-    rankD["MeanPDRank"] = rankD["MeanPD"].rank()
-    rankD["NearPDRank"] = rankD["NearPD"].rank()
-    rankD["sdevRank"] = rankD["sdev"].rank()
+#    # creating a rank column and passing the returned rank series
+#    rankD["ClustRank"] = rankD["Clust"].rank()
+#    rankD["MeanPDRank"] = rankD["MeanPD"].rank()
+#    rankD["NearPDRank"] = rankD["NearPD"].rank()
+#    rankD["sdevRank"] = rankD["sdev"].rank()
 
-    rankD["Color"] = [0] * len(rankD["Clust"])
-    rankD["FAM"] = ["OMP"] * len(rankD["Clust"])
+#    rankD["Color"] = [0] * len(rankD["Clust"])
+#    rankD["FAM"] = ["OMP"] * len(rankD["Clust"])
 
-    c = 0
-    for ii in rankD["Clust"]:
-        # =============================================================================
-        print(ii, colordict[ii])
-        # =============================================================================
-        rankD["Color"][c] = colordict[ii]
-        c += 1
+#    c = 0
+#    for ii in rankD["Clust"]:
+#        # =============================================================================
+#        print(ii, colordict[ii])
+#        # =============================================================================
+#        rankD["Color"][c] = colordict[ii]
+#        c += 1
 
-    print(rankD.head())
+#    print(rankD.head())
 
-    x = "MeanPD"
-    from matplotlib.pyplot import figure
+#    x = "MeanPD"
+#    from matplotlib.pyplot import figure
 
-    figure(figsize=(7, 9), dpi=90)
+#    figure(figsize=(7, 9), dpi=90)
 
-    clust, colors, vals, names, xs = [], [], [], [], []
+#    clust, colors, vals, names, xs = [], [], [], [], []
 
-    i, col = 0, rankD.iloc[:, 1:2].columns[0]
-    print(i, col)
-    vals.append(rankD[col].values)
-    names.append(col)
-    colors.append(rankD[col].values[-1])
-    clust.append(rankD[col].values[1])
-    xs.append(
-        np.random.normal(i + 1, 0.04, rankD[col].values.shape[0])
-    )  # adds jitter to the data points - can be adjusted
+#    i, col = 0, rankD.iloc[:, 1:2].columns[0]
+#    print(i, col)
+#    vals.append(rankD[col].values)
+#    names.append(col)
+#    colors.append(rankD[col].values[-1])
+#    clust.append(rankD[col].values[1])
+#    xs.append(
+#        np.random.normal(i + 1, 0.04, rankD[col].values.shape[0])
+#    )  # adds jitter to the data points - can be adjusted
 
-    #plt.figure(figsize=(4, 8))
+#    plt.figure(figsize=(4, 8))
 
-    plt.boxplot(vals, labels=names, showfliers=False)
-    palette = ["r", "g", "b", "y"]
+#    plt.boxplot(vals, labels=names, showfliers=False)
+#    palette = ["r", "g", "b", "y"]
 
-    for x, val in zip(xs, vals):
-        plt.scatter(x, val, alpha=1, color=rankD["Color"], s=rankD["size"] * 50)
-        for xi, yi, color, cl in zip(x, val, rankD["Color"], rankD["Clust"]):
-            matplotlib.pyplot.annotate(cl, (xi + 0.01, yi + 0.01), color=color)
+#    for x, val in zip(xs, vals):
+#        plt.scatter(x, val, alpha=1, color=rankD["Color"], s=rankD["size"] * 50)
+#        for xi, yi, color, cl in zip(x, val, rankD["Color"], rankD["Clust"]):
+#            matplotlib.pyplot.annotate(cl, (xi + 0.01, yi + 0.01), color=color)
 
-    for i, txt in enumerate(clust):
-        print(i, txt)
+#    for i, txt in enumerate(clust):
+#        print(i, txt)
 
-    plt.ylabel("LogOdds")
+#    plt.ylabel("LogOdds")
 
-    plt.ylim(-2.2, 3.1)
+#    plt.ylim(-1.6, 3.1)
 
-    plt.yticks(np.arange(-2.5, 3.5, 0.5))
+#    plt.yticks(np.arange(-1.5, 3.5, 0.5))
 
-    plt.legend()
-    
-    plt.savefig(
-                "./"
-                + out_dir
-                + "/"
-                + DATE
-                + "_"
-                + str(n_H)
-                + "_EMClust_"
-                + FAM
-                + TREEID
-                + "_"
-                + metric
-                + "_subBAR_MPD.svg",
-        format="svg",
-                dpi=600,
-            )
+#    plt.legend()
 
 #    plt.savefig(
 #        "../data/" + FAM + "colored/2023-03-07" + FAM + TREEID + "_subBAR_MPD.svg",
 #        format="svg",
 #    )
-    #plt.show()
+#    plt.show()
 
-    ####################################################
-    # x = "MeanPD"
-    # y = "ParMeanPD"
+#    ####################################################
+#    x = "MeanPD"
+#    y = "ParMeanPD"
 
-    # rankD.plot.scatter(
-       # x=x, y=y, color=rankD["Color"], s=rankD["size"] * 75, figsize=(9, 8)
-    # )
-    # # =============================================================================
-    # # plt.figure(figsize=(10,10))
-    # # =============================================================================
-    # for k in rankD.iterrows():
-       # clust = k[1]["Clust"]
-       # color = k[1]["Color"]
-       # matplotlib.pyplot.annotate(
-           # k[1]["Clust"], (k[1][x], k[1][y]), color=color, size=18
-       # )
-    # plt.title(FAM + " " + TREEID)
-    # plt.xlabel("Log Odd Tree Mean Pairwise Distance")
-    # plt.ylabel("Log Odd Parent Mean Pairwise Distance")
+#    rankD.plot.scatter(
+#        x=x, y=y, color=rankD["Color"], s=rankD["size"] * 75, figsize=(9, 8)
+#    )
+#    # =============================================================================
+#    # plt.figure(figsize=(10,10))
+#    # =============================================================================
+#    for k in rankD.iterrows():
+#        clust = k[1]["Clust"]
+#        color = k[1]["Color"]
+#        matplotlib.pyplot.annotate(
+#            k[1]["Clust"], (k[1][x], k[1][y]), color=color, size=18
+#        )
+#    plt.title(FAM + " " + TREEID)
+#    plt.xlabel("Log Odd Tree Mean Pairwise Distance")
+#    plt.ylabel("Log Odd Parent Mean Pairwise Distance")
 
-    # plt.savefig(
-       # "../data/"
-       # + FAM
-       # + "colored/2023-03-07"
-       # + FAM
-       # + TREEID
-       # + "_subpar_MPD_scatter.svg",
-       # format="svg",
-    # )
-    # plt.show()
+#    plt.savefig(
+#        "../data/"
+#        + FAM
+#        + "colored/2023-03-07"
+#        + FAM
+#        + TREEID
+#        + "_subpar_MPD_scatter.svg",
+#        format="svg",
+#    )
+#    plt.show()
 
-    # =============================================================================
-    #
-    # =============================================================================
-    Y_table = pd.read_csv(OUTF,
-       dtype="string",
-    )
-    clusters = Y_table[["Label", "Cluster"]]
+#    # =============================================================================
+#    #
+#    # =============================================================================
+#    Y_table = pd.read_csv(
+#        "../data/" + FAM + "colored/2023-03-07" + FAM + TREEID + "_coloredPASSONE.csv",
+#        dtype="string",
+#    )
+#    clusters = Y_table[["Label", "Cluster"]]
 
-    start_time = time.time()
+#    start_time = time.time()
 
-    # dicts for dataframe
-    uniqueclust = unique(clusters["Cluster"])
-    FDdict = {}
-    parFDdict = {}
-    meanPDdict = {}
-    sizedict = {}
+#    # dicts for dataframe
+#    uniqueclust = unique(clusters["Cluster"])
+#    FDdict = {}
+#    parFDdict = {}
+#    meanPDdict = {}
+#    sizedict = {}
 
-    sdevPDdict = {}
-    meammDdict = {}
-    clustdict = {}
-    mrcadict = {}
-    stdistPDdict = {}
+#    sdevPDdict = {}
+#    meammDdict = {}
+#    clustdict = {}
+#    mrcadict = {}
+#    stdistPDdict = {}
 
-    pdm = tree.phylogenetic_distance_matrix()
-    print("Sum of PD", pdm.sum_of_distances())
-    totfpd = pdm.sum_of_distances()
+#    pdm = tree.phylogenetic_distance_matrix()
+#    print("Sum of PD", pdm.sum_of_distances())
+#    totfpd = pdm.sum_of_distances()
 
-    print("MPD", pdm.mean_pairwise_distance())
-    totmpd = pdm.mean_pairwise_distance()
+#    print("MPD", pdm.mean_pairwise_distance())
+#    totmpd = pdm.mean_pairwise_distance()
 
-    totphg = dendropy.calculate.treemeasure.treeness(tree)
-    print("PHgamma", totphg)
+#    totphg = dendropy.calculate.treemeasure.treeness(tree)
+#    print("PHgamma", totphg)
 
-    totsdevPD = np.std(pdmA)
-    print("TotSTD", totsdevPD)
+#    totsdevPD = np.std(pdmA)
+#    print("TotSTD", totsdevPD)
 
-    for mm in uniqueclust:
-       isclust = clusters["Cluster"] == mm
-       clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
-       clustlist = []
-       for ii in clusttaxon:
-           clustlist.append(str(ii[0]))
-       clustdict[str(mm)] = clustlist
-       nd = tree.mrca(taxon_labels=clustlist)
-       print(mm, len(clustlist))
-       mrcadict[str(mm)] = nd
+#    for mm in uniqueclust:
+#        isclust = clusters["Cluster"] == mm
+#        clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
+#        clustlist = []
+#        for ii in clusttaxon:
+#            clustlist.append(str(ii[0]))
+#        clustdict[str(mm)] = clustlist
+#        nd = tree.mrca(taxon_labels=clustlist)
+#        print(mm, len(clustlist))
+#        mrcadict[str(mm)] = nd
 
-    for mrca in mrcadict.items():
-       print(mrca[0], mrca[1])
-       clustlist = []
-       for id in mrca[1].parent_node.leaf_nodes():
-           print(id.__str__().split(" ")[-1][1:-4])
-           clustlist.append(str(id.__str__().split(" ")[-1][1:-4]))
-       treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
-       pdmclust = treeclust.phylogenetic_distance_matrix()
-       clustmpd = pdmclust.mean_pairwise_distance()
+#    for mrca in mrcadict.items():
+#        print(mrca[0], mrca[1])
+#        clustlist = []
+#        for id in mrca[1].parent_node.leaf_nodes():
+#            print(id.__str__().split(" ")[-1][1:-4])
+#            clustlist.append(str(id.__str__().split(" ")[-1][1:-4]))
+#        treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
+#        pdmclust = treeclust.phylogenetic_distance_matrix()
+#        clustmpd = pdmclust.mean_pairwise_distance()
 
-       print(pdmclust)
-       mm = mrca[0]
-       parclustmetric[str(mm)] = clustmpd
+#        print(pdmclust)
+#        mm = mrca[0]
+#        parclustmetric[str(mm)] = clustmpd
 
-       # parent node
-       # split table for leaves
-       # extract tree for leaves
-       # et MPD for that group
-    print(dir(mrca[1]))
+#        # parent node
+#        # split table for leaves
+#        # extract tree for leaves
+#        # et MPD for that group
+#    print(dir(mrca[1]))
 
-    for mm in uniqueclust:
-       isclust = clusters["Cluster"] == mm
-       clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
-       clustlist = []
-       for ii in clusttaxon:
-           clustlist.append(str(ii[0]))
+#    for mm in uniqueclust:
+#        isclust = clusters["Cluster"] == mm
+#        clusttaxon = clusters[isclust][["Label"]].to_numpy().tolist()
+#        clustlist = []
+#        for ii in clusttaxon:
+#            clustlist.append(str(ii[0]))
 
-       if len(clusttaxon) > 1:
-           # extract subfamily
-           treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
-           pdmclust = treeclust.phylogenetic_distance_matrix()
+#        if len(clusttaxon) > 1:
+#            # extract subfamily
+#            treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
+#            pdmclust = treeclust.phylogenetic_distance_matrix()
 
-           pdmdatatable = pdmclust.as_data_table()._data
-           pdmA = np.zeros(
-               (len(treeclust.taxon_namespace), len(treeclust.taxon_namespace))
-           )
-           counter = 0
-           i = 0
-           for taxon in clustlist:
-               j = 0
-               for taxon2 in clustlist:
-                   # print(pdmdatatable[taxon][taxon2])
-                   if j > i:  # j>i:
-                       pdmA[i, j] = float(pdmdatatable[taxon][taxon2])
-                       pdmA[j, i] = float(pdmdatatable[taxon][taxon2])
-                   j += 1
-               i += 1
+#            pdmdatatable = pdmclust.as_data_table()._data
+#            pdmA = np.zeros(
+#                (len(treeclust.taxon_namespace), len(treeclust.taxon_namespace))
+#            )
+#            counter = 0
+#            i = 0
+#            for taxon in clustlist:
+#                j = 0
+#                for taxon2 in clustlist:
+#                    # print(pdmdatatable[taxon][taxon2])
+#                    if j > i:  # j>i:
+#                        pdmA[i, j] = float(pdmdatatable[taxon][taxon2])
+#                        pdmA[j, i] = float(pdmdatatable[taxon][taxon2])
+#                    j += 1
+#                i += 1
 
-           c = 0.1
-           c2 = 0.0
-           func = np.absolute
+#            c = 0.1
+#            c2 = 0.0
+#            func = np.absolute
 
-           size = len(clustlist)
-           sizedict[str(mm)] = size
-           clustmpd = pdmclust.mean_pairwise_distance()
-           print(
-               "Cluster:",
-               mm,
-               "; Tree Metric Log odds MPD",
-               np.log10(clustmpd / totmpd),
-           )
+#            size = len(clustlist)
+#            sizedict[str(mm)] = size
+#            clustmpd = pdmclust.mean_pairwise_distance()
+#            print(
+#                "Cluster:",
+#                mm,
+#                "; Tree Metric Log odds MPD",
+#                np.log10(clustmpd / totmpd),
+#            )
 
-           print(
-               "Cluster:",
-               mm,
-               "; Parent clade Metric Log odds MPD",
-               np.log10(clustmpd / parclustmetric[mm]),
-           )
+#            print(
+#                "Cluster:",
+#                mm,
+#                "; Parent clade Metric Log odds MPD",
+#                np.log10(clustmpd / parclustmetric[mm]),
+#            )
 
-           meanpairwisedist = pdmclust.mean_pairwise_distance()
-           meanPDdict[str(mm)] = np.log10(clustmpd / totmpd)
-           FDdict[str(mm)] = func(pdmclust.sum_of_distances())
-           parFDdict[str(mm)] = np.log10(clustmpd / parclustmetric[mm])
-           sdevPDdict[str(mm)] = np.log10(func(np.std(pdmA)) / totsdevPD)
+#            meanpairwisedist = pdmclust.mean_pairwise_distance()
+#            meanPDdict[str(mm)] = np.log10(clustmpd / totmpd)
+#            FDdict[str(mm)] = func(pdmclust.sum_of_distances())
+#            parFDdict[str(mm)] = np.log10(clustmpd / parclustmetric[mm])
+#            sdevPDdict[str(mm)] = np.log10(func(np.std(pdmA)) / totsdevPD)
 
-           clustphg = dendropy.calculate.treemeasure.treeness(treeclust)
-           # print("Cluster:",mm,"; Metric Log odds treeness",np.log10(clustphg/totphg))
+#            clustphg = dendropy.calculate.treemeasure.treeness(treeclust)
+#            # print("Cluster:",mm,"; Metric Log odds treeness",np.log10(clustphg/totphg))
 
-           meammDdict[str(mm)] = func(pdmclust.mean_nearest_taxon_distance())
-           stdistPDdict[str(mm)] = func(clustphg)
+#            meammDdict[str(mm)] = func(pdmclust.mean_nearest_taxon_distance())
+#            stdistPDdict[str(mm)] = func(clustphg)
 
-    colordict = {}
-    for k in Y_table.iloc:
-       clust = k["Cluster"]
-       col = k["Color"]
+#    colordict = {}
+#    for k in Y_table.iloc:
+#        clust = k["Cluster"]
+#        col = k["Color"]
 
-       colordict[clust] = col
+#        colordict[clust] = col
 
-    rankD = pd.DataFrame(columns=["Clust", "MeanPD", "NearPD", "sdev"], dtype=object)
-    rankD["Clust"] = list(meanPDdict.keys())
-    rankD["MeanPD"] = list(meanPDdict.values())
-    rankD["NearPD"] = list(meammDdict.values())
-    rankD["FPD"] = list(FDdict.values())
-    rankD["sdev"] = list(sdevPDdict.values())
-    rankD["size"] = list(sizedict.values())
+#    rankD = pd.DataFrame(columns=["Clust", "MeanPD", "NearPD", "sdev"], dtype=object)
+#    rankD["Clust"] = list(meanPDdict.keys())
+#    rankD["MeanPD"] = list(meanPDdict.values())
+#    rankD["NearPD"] = list(meammDdict.values())
+#    rankD["FPD"] = list(FDdict.values())
+#    rankD["sdev"] = list(sdevPDdict.values())
+#    rankD["size"] = list(sizedict.values())
 
-    # creating a rank column and passing the returned rank series
-    rankD["ClustRank"] = rankD["Clust"].rank()
-    rankD["MeanPDRank"] = rankD["MeanPD"].rank()
-    rankD["NearPDRank"] = rankD["NearPD"].rank()
-    rankD["sdevRank"] = rankD["sdev"].rank()
+#    # creating a rank column and passing the returned rank series
+#    rankD["ClustRank"] = rankD["Clust"].rank()
+#    rankD["MeanPDRank"] = rankD["MeanPD"].rank()
+#    rankD["NearPDRank"] = rankD["NearPD"].rank()
+#    rankD["sdevRank"] = rankD["sdev"].rank()
 
-    rankD["Color"] = [0] * len(clustdict.keys())
+#    rankD["Color"] = [0] * len(clustdict.keys())
 
-    c = 0
-    for ii in rankD["Clust"]:
-       # =============================================================================
-       print(ii, colordict[ii])
-       # =============================================================================
-       rankD["Color"][c] = colordict[ii]
-       c += 1
+#    c = 0
+#    for ii in rankD["Clust"]:
+#        # =============================================================================
+#        print(ii, colordict[ii])
+#        # =============================================================================
+#        rankD["Color"][c] = colordict[ii]
+#        c += 1
 
-    print(rankD.head())
-    # =============================================================================
-    #
-    # =============================================================================
-    x = "MeanPD"
-    from matplotlib.pyplot import figure
+#    print(rankD.head())
+#    # =============================================================================
+#    #
+#    # =============================================================================
+#    x = "MeanPD"
+#    from matplotlib.pyplot import figure
 
-    figure(figsize=(7, 9), dpi=90)
+#    figure(figsize=(7, 9), dpi=90)
 
-    clust, colors, vals, names, xs = [], [], [], [], []
+#    clust, colors, vals, names, xs = [], [], [], [], []
 
-    i, col = 0, rankD.iloc[:, 1:2].columns[0]
-    print(i, col)
-    vals.append(rankD[col].values)
-    names.append(col)
-    colors.append(rankD[col].values[-1])
-    clust.append(rankD[col].values[1])
-    xs.append(
-       np.random.normal(i + 1, 0.04, rankD[col].values.shape[0])
-    )  # adds jitter to the data points - can be adjusted
+#    i, col = 0, rankD.iloc[:, 1:2].columns[0]
+#    print(i, col)
+#    vals.append(rankD[col].values)
+#    names.append(col)
+#    colors.append(rankD[col].values[-1])
+#    clust.append(rankD[col].values[1])
+#    xs.append(
+#        np.random.normal(i + 1, 0.04, rankD[col].values.shape[0])
+#    )  # adds jitter to the data points - can be adjusted
 
-    #plt.figure(figsize=(4, 8))
+#    plt.figure(figsize=(4, 8))
 
-    plt.boxplot(vals, labels=names, showfliers=False)
-    palette = ["r", "g", "b", "y"]
+#    plt.boxplot(vals, labels=names, showfliers=False)
+#    palette = ["r", "g", "b", "y"]
 
-    for x, val in zip(xs, vals):
-       plt.scatter(x, val, alpha=1, color=rankD["Color"], s=rankD["size"] * 50)
-       for xi, yi, color, cl in zip(x, val, rankD["Color"], rankD["Clust"]):
-           matplotlib.pyplot.annotate(cl, (xi + 0.01, yi + 0.01), color=color)
+#    for x, val in zip(xs, vals):
+#        plt.scatter(x, val, alpha=1, color=rankD["Color"], s=rankD["size"] * 50)
+#        for xi, yi, color, cl in zip(x, val, rankD["Color"], rankD["Clust"]):
+#            matplotlib.pyplot.annotate(cl, (xi + 0.01, yi + 0.01), color=color)
 
-    for i, txt in enumerate(clust):
-       print(i, txt)
+#    for i, txt in enumerate(clust):
+#        print(i, txt)
 
-    plt.ylabel("LogOdds")
+#    plt.ylabel("LogOdds")
 
-    plt.ylim(-2.1, 3.1)
+#    plt.ylim(-1.6, 3.1)
 
-    plt.yticks(np.arange(-3, 3.5, 0.5))
+#    plt.yticks(np.arange(-1.5, 3.5, 0.5))
 
-    plt.legend()
+#    plt.legend()
 
-    plt.savefig(
-                "./"
-                + out_dir
-                + "/"
-                + DATE
-                + "_"
-                + str(n_H)
-                + "_EMClust_"
-                + FAM
-                + TREEID
-                + "_"
-                + metric
-       + "_sPASONEubBAR_MPD.svg",
-        format="svg",
-                dpi=600,
-            )
+#    plt.savefig(
+#        "../data/"
+#        + FAM
+#        + "colored/2023-03-07"
+#        + FAM
+#        + TREEID
+#        + "_sPASONEubBAR_MPD.svg",
+#        format="svg",
+#    )
+#    plt.show()
 
-    #plt.show()
+#    ####################################################
+#    x = "MeanPD"
+#    y = "NearPD"
+#    rankD.plot.scatter(x=x, y=y, color=rankD["Color"])
 
-    # ####################################################
-    # x = "MeanPD"
-    # y = "NearPD"
-    # rankD.plot.scatter(x=x, y=y, color=rankD["Color"])
-
-    # for k in rankD.iterrows():
-       # # =============================================================================
-       # #     print(k[1]['Color'])
-       # # =============================================================================
-       # clust = k[1]["Clust"]
-       # color = k[1]["Color"]
-       # matplotlib.pyplot.annotate(k[1]["Clust"], (k[1][x], k[1][y]), color=color)
-    # plt.title(FAM)
-    # plt.xlabel("Mean Pairwise Distance")
-    # plt.ylabel("Mean Nearset Taxon Distance")
-    # plt.show()
+#    for k in rankD.iterrows():
+#        # =============================================================================
+#        #     print(k[1]['Color'])
+#        # =============================================================================
+#        clust = k[1]["Clust"]
+#        color = k[1]["Color"]
+#        matplotlib.pyplot.annotate(k[1]["Clust"], (k[1][x], k[1][y]), color=color)
+#    plt.title(FAM)
+#    plt.xlabel("Mean Pairwise Distance")
+#    plt.ylabel("Mean Nearset Taxon Distance")
+#    plt.show()
 
 #    # =============================================================================
 #    #             dn = dendro
