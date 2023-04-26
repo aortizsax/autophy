@@ -63,17 +63,13 @@ autophy -h
 ```
 returns:
 ```{bash}
-usage: autophy [-h] [-a ALIGNMENT] [-t TREE] [-id TREEID] [-d DATABASE]
-               [-H HEIGHT] [-o OUTPUT_SUFFIX] [-D OUTPUT_DIRECTORY]
+usage: autophy [-h] [-t TREE] [-id TREEID] [-d DATABASE] [-H HEIGHT] [-o OUTPUT_SUFFIX]
+               [-D OUTPUT_DIRECTORY]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -a ALIGNMENT, --alignment ALIGNMENT
-                        Alignment file in fasta format [default=../data/OMPaln
-                        /2021-06-11_OMPuniprot_muscle.fasta].
-  -t TREE, --tree TREE  Phylogenetic tree in Nexus or Newick with the same
-                        labels as alignment file [default=../data/uniprotbeast
-                        /uniprotOMP_muscle_1647964589147_cah.tree].
+  -t TREE, --tree TREE  Phylogenetic tree in Nexus or Newick with the same labels as alignment file
+                        [default=../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree].
   -id TREEID, --treeid TREEID
                         Protein family string indetifier [default=OMP].
   -d DATABASE, --database DATABASE
@@ -89,11 +85,11 @@ optional arguments:
 To run:
 ```{bash}
 cd data
-autophy -a ../data/OMPaln/2021-06-11_OMPuniprot_muscle.fasta -t ../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree -id OMP -d uniprot
+autophy -t ../data/uniprotbeast/uniprotOMP_muscle_1647964589147_cah.tree -id OMP -d uniprot
 ```
 Or for your data
 ```{bash}
-autophy -a ALIGNMENTFILE.fasta -t TREE.tree -id ID -d DATASET 
+autophy -t TREE.tree -id ID -d DATASET 
 ```
 
 First UMAP projection. Parameters used 
