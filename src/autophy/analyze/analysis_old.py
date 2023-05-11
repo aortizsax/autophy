@@ -1255,8 +1255,6 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
         )
 
     tree.ladderize()
-    OUTF = "./" + out_dir + "/" + DATE + "_" + FAM + TREEID + "_colored_RF.csv"
-
     Y_table = pd.read_csv(OUTF,
         dtype="string",
     )
@@ -1477,9 +1475,11 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
 
     plt.ylabel("LogOdds")
 
-    plt.ylim(-3.1, 3.1)
+    plt.ylim(-2.2, 3.1)
 
-    plt.yticks(np.arange(-3.5, 3.5, 0.5))
+    plt.yticks(np.arange(-2.5, 3.5, 0.5))
+
+    plt.legend()
     
     plt.savefig(
                 "./"
@@ -1538,8 +1538,6 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
     # =============================================================================
     #
     # =============================================================================
-    OUTF = "./" + out_dir + "/" + DATE + "_" + FAM + TREEID + "_coloredPASSONE.csv"
-    
     Y_table = pd.read_csv(OUTF,
        dtype="string",
     )
@@ -1615,9 +1613,6 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
            # extract subfamily
            treeclust = tree.extract_tree_with_taxa_labels(labels=clustlist)
            pdmclust = treeclust.phylogenetic_distance_matrix()
-           mrca_cluster = tree.mrca(taxon_labels=clustlist)
-           subtending_cluster_edge = mrca_cluster.edge_length
-
 
            pdmdatatable = pdmclust.as_data_table()._data
            pdmA = np.zeros(
@@ -1657,7 +1652,7 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
            )
 
            meanpairwisedist = pdmclust.mean_pairwise_distance()
-           meanPDdict[str(mm)] = np.log10(clustmpd / subtending_cluster_edge)
+           meanPDdict[str(mm)] = np.log10(clustmpd / totmpd)
            FDdict[str(mm)] = func(pdmclust.sum_of_distances())
            parFDdict[str(mm)] = np.log10(clustmpd / parclustmetric[mm])
            sdevPDdict[str(mm)] = np.log10(func(np.std(pdmA)) / totsdevPD)
@@ -1735,10 +1730,11 @@ def cluster(database, height, output_prefix, treefile, treeid, out_dir):
 
     plt.ylabel("LogOdds")
 
-    plt.ylim(-3.1, 3.1)
+    plt.ylim(-2.1, 3.1)
 
-    plt.yticks(np.arange(-3.5, 3.5, 0.5))
+    plt.yticks(np.arange(-3, 3.5, 0.5))
 
+    plt.legend()
 
     plt.savefig(
                 "./"
