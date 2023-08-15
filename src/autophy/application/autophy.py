@@ -71,8 +71,15 @@ def main():
         "-H",
         "--height",
         action="store",
-        default="22",
+        default="25",
         help="Height of Biopython plot [default=%(default)s].",
+    )
+    parser.add_argument(
+        "-W",
+        "--width",
+        action="store",
+        default="8",
+        help="Width of Biopython plot [default=%(default)s].",
     )
     parser.add_argument(
         "-o",
@@ -93,12 +100,13 @@ def main():
 
     database = args.database
     height = args.height
+    width = args.width
     output_suffix = args.output_suffix
     treefile = args.tree
     treeid = args.treeid
     out_dir = args.output_directory
 
-    cluster(database, height, output_suffix, treefile, treeid, out_dir)
+    cluster(database, width, height, output_suffix, treefile, treeid, out_dir)
 
 
 if __name__ == "__main__":
