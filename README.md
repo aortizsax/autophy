@@ -83,17 +83,18 @@ autophy -t TREE.tree -id ID -d DATASET
 
 First UMAP projection. Parameters used 
 
-![](./output/2023-03-28_10_ogUMAPproguniprotOMP_precomputed.svg)
+![](./paper_trees/output_OMP/2023-05-10_3_ogUMAPproguniprotOMP_precomputed.svg)
 
 Second, we fit Gaussian Mixture Model(GMM) using Expectation Maximization(EM) to the UMAP projection. GMM fits Gaussian peaks to any dimension. We score GMM models of increasing peak number using BIC score and pick the model with the lowest BIC score.
 
-![](./output/2023-03-28_10_GMMsweep_uniprotOMP_precomputed.svg)
+![](./paper_trees/output_OMP/2023-05-10_3_GMMsweep_uniprotOMP_precomputed.svg)
 
 
 Third, in the case that when GMM peaks in the model pertain to paraphyletic clusters, we slpit those GMM peaks into simple monoplytic clusters and add a decimal at the end of the label so the user knows which GMM peak they originated from. Finally, the program prints the final clustered and colored tree 
 
-![](./output/2023-03-28_10_EMClust_uniprotOMP_precomputed_coloredtree.svg)
+![](./paper_trees/output_OMP/2023-05-10_3_EMClust_uniprotOMP_precomputed_coloredtree.svg)
 
 
 ## License and Warranty
 Please see the file "LICENSE" for details.
+
